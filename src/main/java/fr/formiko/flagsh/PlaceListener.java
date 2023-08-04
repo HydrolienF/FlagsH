@@ -73,7 +73,8 @@ public class PlaceListener implements Listener {
 
         // BlockDisplay don't work with banners
         ItemDisplay itemDisplay = banner.getWorld().spawn(location, ItemDisplay.class);
-        ItemStack itemStack = banner.getState().getData().toItemStack(1);
+        // ItemStack itemStack = banner.getState().getData().toItemStack(1);
+        ItemStack itemStack = event.getItemInHand();
         // itemStack.setItemMeta(banner.getState().getItemMeta());
         itemDisplay.setItemStack(itemStack);
         // @formatter:off
