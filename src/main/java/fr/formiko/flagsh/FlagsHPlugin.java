@@ -4,7 +4,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class FlagsHPlugin extends JavaPlugin {
     @Override
-    public void onEnable() { getLogger().info("FlagsHPlugin enabled"); }
+    public void onEnable() {
+        getLogger().info("FlagsHPlugin enabled");
+        getServer().getPluginManager().registerEvents(new PlaceListener(), this);
+    }
 
     @Override
     public void onDisable() { getLogger().info("FlagsHPlugin disabled"); }
