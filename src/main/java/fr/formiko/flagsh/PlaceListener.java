@@ -1,6 +1,7 @@
 package fr.formiko.flagsh;
 
 import java.util.List;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
@@ -44,13 +45,37 @@ public class PlaceListener implements Listener {
 
         p.sendMessage("You placed a wall banner in sneak in " + banner.getLocation() + " " + banner.getType().toString() + " "
                 + behind.getType().toString());
+        p.sendMessage("blocdata: " + data.getAsString());
+
+
+        float yaw = 0;
+        float offsetX = 0;
+        float offsetZ = 0;
+        if (behind.getX() > banner.getX()) {
+            p.sendMessage("behind.getX() > banner.getX()");
+            yaw = 0;
+        } else if (behind.getX() < banner.getX()) {
+            p.sendMessage("behind.getX() < banner.getX()");
+            yaw = 180;
+        } else if (behind.getZ() > banner.getZ()) {
+            p.sendMessage("behind.getZ() > banner.getZ()");
+            yaw = 90;
+        } else if (behind.getZ() < banner.getZ()) {
+            p.sendMessage("behind.getZ() < banner.getZ()");
+            yaw = -90;
+        }
+
+
+        p.sendMessage("yaw: " + yaw + "");
+
+        Location location = new Location(banner.getWorld(), banner.getX() + offsetX + 0.5f, banner.getY() + 0.5f,
+                banner.getZ() + offsetZ + 0.5f);
 
         // BlockDisplay don't work with banners
-        ItemDisplay itemDisplay = banner.getWorld().spawn(banner.getLocation(), ItemDisplay.class);
+        ItemDisplay itemDisplay = banner.getWorld().spawn(location, ItemDisplay.class);
         ItemStack itemStack = banner.getState().getData().toItemStack(1);
         // itemStack.setItemMeta(banner.getState().getItemMeta());
         itemDisplay.setItemStack(itemStack);
-        // itemDisplay.setRotation(-90, 40);
         // @formatter:off
         itemDisplay.setTransformationMatrix(new Matrix4f(
                 0, -1, 0, 0,
@@ -59,5 +84,20 @@ public class PlaceListener implements Listener {
                 0, 0, 0, 1));
         // @formatter:on
 
+        itemDisplay.setRotation(yaw, 0);
+
+        // itemDisplay.remove();
+
+        // remove the placed banner without droping the item
+        banner.setType(Material.AIR);
+
+
+        // Or use a custom interaction so that player can break the banner
+
+        // Or make it break when block behind is broken
+
+        // Interaction interaction = new Interaction();
+        // interaction.setInteractionWidth(1);
+        // interaction.setInteractionHeight(1);
     }
 }
