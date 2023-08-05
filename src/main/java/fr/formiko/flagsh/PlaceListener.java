@@ -14,22 +14,22 @@ import org.bukkit.inventory.ItemStack;
 import org.joml.Matrix4f;
 
 public class PlaceListener implements Listener {
-    private List<Material> allWallBanners = List.of(Material.WHITE_WALL_BANNER, Material.ORANGE_WALL_BANNER, Material.MAGENTA_WALL_BANNER,
-            Material.LIGHT_BLUE_WALL_BANNER, Material.YELLOW_WALL_BANNER, Material.LIME_WALL_BANNER, Material.PINK_WALL_BANNER,
-            Material.GRAY_WALL_BANNER, Material.LIGHT_GRAY_WALL_BANNER, Material.CYAN_WALL_BANNER, Material.PURPLE_WALL_BANNER,
-            Material.BLUE_WALL_BANNER, Material.BROWN_WALL_BANNER, Material.GREEN_WALL_BANNER, Material.RED_WALL_BANNER,
-            Material.BLACK_WALL_BANNER);
-    private List<Material> allFences = List.of(Material.ACACIA_FENCE, Material.BAMBOO_FENCE, Material.BIRCH_FENCE, Material.CHERRY_FENCE,
-            Material.CRIMSON_FENCE, Material.DARK_OAK_FENCE, Material.JUNGLE_FENCE, Material.OAK_FENCE, Material.SPRUCE_FENCE,
-            Material.MANGROVE_FENCE_GATE, Material.NETHER_BRICK_FENCE, Material.WARPED_FENCE);
-    private List<Material> allGlacePane = List.of(Material.GLASS_PANE, Material.BLACK_STAINED_GLASS_PANE, Material.BLUE_STAINED_GLASS_PANE,
-            Material.BROWN_STAINED_GLASS_PANE, Material.CYAN_STAINED_GLASS_PANE, Material.GRAY_STAINED_GLASS_PANE,
-            Material.GREEN_STAINED_GLASS_PANE, Material.LIGHT_BLUE_STAINED_GLASS_PANE, Material.LIGHT_GRAY_STAINED_GLASS_PANE,
-            Material.LIME_STAINED_GLASS_PANE, Material.MAGENTA_STAINED_GLASS_PANE, Material.ORANGE_STAINED_GLASS_PANE,
-            Material.PINK_STAINED_GLASS_PANE, Material.PURPLE_STAINED_GLASS_PANE, Material.RED_STAINED_GLASS_PANE,
-            Material.WHITE_STAINED_GLASS_PANE, Material.YELLOW_STAINED_GLASS_PANE, Material.IRON_BARS, Material.CHAIN, Material.BAMBOO,
-            Material.LIGHTNING_ROD);
-    private List<Material> allWalls = List.of(Material.BLACKSTONE_WALL, Material.BRICK_WALL, Material.COBBLESTONE_WALL,
+    private static final List<Material> allWallBanners = List.of(Material.WHITE_WALL_BANNER, Material.ORANGE_WALL_BANNER,
+            Material.MAGENTA_WALL_BANNER, Material.LIGHT_BLUE_WALL_BANNER, Material.YELLOW_WALL_BANNER, Material.LIME_WALL_BANNER,
+            Material.PINK_WALL_BANNER, Material.GRAY_WALL_BANNER, Material.LIGHT_GRAY_WALL_BANNER, Material.CYAN_WALL_BANNER,
+            Material.PURPLE_WALL_BANNER, Material.BLUE_WALL_BANNER, Material.BROWN_WALL_BANNER, Material.GREEN_WALL_BANNER,
+            Material.RED_WALL_BANNER, Material.BLACK_WALL_BANNER);
+    private static final List<Material> allFences = List.of(Material.ACACIA_FENCE, Material.BAMBOO_FENCE, Material.BIRCH_FENCE,
+            Material.CHERRY_FENCE, Material.CRIMSON_FENCE, Material.DARK_OAK_FENCE, Material.JUNGLE_FENCE, Material.OAK_FENCE,
+            Material.SPRUCE_FENCE, Material.MANGROVE_FENCE_GATE, Material.NETHER_BRICK_FENCE, Material.WARPED_FENCE);
+    private static final List<Material> allGlacePanes = List.of(Material.GLASS_PANE, Material.BLACK_STAINED_GLASS_PANE,
+            Material.BLUE_STAINED_GLASS_PANE, Material.BROWN_STAINED_GLASS_PANE, Material.CYAN_STAINED_GLASS_PANE,
+            Material.GRAY_STAINED_GLASS_PANE, Material.GREEN_STAINED_GLASS_PANE, Material.LIGHT_BLUE_STAINED_GLASS_PANE,
+            Material.LIGHT_GRAY_STAINED_GLASS_PANE, Material.LIME_STAINED_GLASS_PANE, Material.MAGENTA_STAINED_GLASS_PANE,
+            Material.ORANGE_STAINED_GLASS_PANE, Material.PINK_STAINED_GLASS_PANE, Material.PURPLE_STAINED_GLASS_PANE,
+            Material.RED_STAINED_GLASS_PANE, Material.WHITE_STAINED_GLASS_PANE, Material.YELLOW_STAINED_GLASS_PANE, Material.IRON_BARS,
+            Material.CHAIN, Material.BAMBOO, Material.LIGHTNING_ROD);
+    private static final List<Material> allWalls = List.of(Material.BLACKSTONE_WALL, Material.BRICK_WALL, Material.COBBLESTONE_WALL,
             Material.ANDESITE_WALL, Material.DEEPSLATE_BRICK_WALL, Material.DEEPSLATE_TILE_WALL, Material.DIORITE_WALL,
             Material.GRANITE_WALL, Material.NETHER_BRICK_WALL, Material.STONE_BRICK_WALL, Material.POLISHED_BLACKSTONE_BRICK_WALL,
             Material.POLISHED_BLACKSTONE_WALL, Material.POLISHED_DEEPSLATE_WALL, Material.PRISMARINE_WALL, Material.RED_NETHER_BRICK_WALL,
@@ -95,7 +95,7 @@ public class PlaceListener implements Listener {
         } else {
             offsetZ += offsetToHitTheWall;
         }
-        createBannerDisplay(banner, itemStack,
+        ItemDisplay id1 = createBannerDisplay(banner, itemStack,
                 new Location(banner.getWorld(), banner.getX() + offsetX + 0.5f, banner.getY() + 0.5f, banner.getZ() + offsetZ + 0.5f), yaw,
                 true);
 
@@ -106,7 +106,7 @@ public class PlaceListener implements Listener {
         } else {
             offsetZ -= 2 * offsetToHitTheWall;
         }
-        createBannerDisplay(banner, itemStack,
+        ItemDisplay id2 = createBannerDisplay(banner, itemStack,
                 new Location(banner.getWorld(), banner.getX() - offsetX + 0.5f, banner.getY() + 0.5f, banner.getZ() - offsetZ + 0.5f), yaw,
                 false);
 
@@ -123,6 +123,19 @@ public class PlaceListener implements Listener {
         // Interaction interaction = new Interaction();
         // interaction.setInteractionWidth(1);
         // interaction.setInteractionHeight(1);
+
+        // new Thread() {
+        // @Override
+        // public void run() {
+        // try {
+        // Thread.sleep(1000);
+        // id1.remove();
+        // id2.remove();
+        // } catch (InterruptedException e) {
+        // e.printStackTrace();
+        // }
+        // }
+        // }.start();
     }
 
     /** Return the offset to hit the wall depending on the block behind. */
@@ -131,7 +144,7 @@ public class PlaceListener implements Listener {
             return 0.42f;
         else if (allFences.contains(behind.getType()))
             return 0.55f;
-        else if (allGlacePane.contains(behind.getType()))
+        else if (allGlacePanes.contains(behind.getType()))
             return 0.6f;
         else
             return 0.18f;
