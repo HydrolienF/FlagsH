@@ -5,7 +5,9 @@ import java.util.UUID;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.Directional;
 import org.bukkit.entity.ItemDisplay;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -36,9 +38,6 @@ public class FlagsH {
             Material.POLISHED_BLACKSTONE_WALL, Material.POLISHED_DEEPSLATE_WALL, Material.PRISMARINE_WALL, Material.RED_NETHER_BRICK_WALL,
             Material.RED_SANDSTONE_WALL, Material.SANDSTONE_WALL, Material.MOSSY_COBBLESTONE_WALL, Material.MOSSY_STONE_BRICK_WALL,
             Material.END_STONE_BRICK_WALL, Material.COBBLED_DEEPSLATE_WALL, Material.MUD_BRICK_WALL);
-
-    public static float MAX_FLAG_SIZE = 10;
-    public static float INCREASING_SIZE_STEP = 0.5f;
 
 
     // remove ---------------------------------------------------------------------------------------------------------
@@ -129,7 +128,18 @@ public class FlagsH {
         banner.setMetadata("flag", new FixedMetadataValue(plugin, id1.getUniqueId() + "," + id2.getUniqueId()));
         banner.setMetadata("flagSize", new FixedMetadataValue(plugin, size));
         // TODO change the banner texture to an invisible one so that player can still break it or extends the flag but won't see the
-        // banner.
+        // banner texture
+
+        if (banner.getBlockData() instanceof Directional oldDirectional) {
+            p.sendMessage("directional: " + oldDirectional.getFacing().toString());
+            BlockFace blockFace = oldDirectional.getFacing();
+            banner.setType(Material.BLACK_WALL_BANNER);
+            Directional newDirectional = (Directional) banner.getBlockData();
+            newDirectional.setFacing(blockFace);
+            p.sendMessage("new directional: " + newDirectional.getFacing().toString());
+            banner.setBlockData(newDirectional);
+        }
+
     }
 
     /** Return the offset to hit the wall depending on the block behind. */
@@ -177,7 +187,8 @@ public class FlagsH {
     public static void extendsFlag(Player p, Block banner, Block behind, ItemStack itemStack) {
         removeFlagIfNeeded(banner, false);
         createFlag(p, banner, behind, itemStack,
-                Math.min(banner.getMetadata("flagSize").get(0).asFloat() + INCREASING_SIZE_STEP, MAX_FLAG_SIZE));
+                (float) Math.min(banner.getMetadata("flagSize").get(0).asFloat() + plugin.getConfig().getDouble("increasingSizeStep"),
+                        plugin.getConfig().getDouble("maxFlagSize")));
     }
 
 }

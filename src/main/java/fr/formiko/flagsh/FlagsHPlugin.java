@@ -3,11 +3,19 @@ package fr.formiko.flagsh;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class FlagsHPlugin extends JavaPlugin {
+
     @Override
     public void onEnable() {
         FlagsH.plugin = this;
+
+        getConfig().addDefault("maxFlagSize", 5f);
+        getConfig().addDefault("increasingSizeStep", 0.5f);
+        getConfig().options().copyDefaults(true);
+        saveConfig();
+
         getServer().getPluginManager().registerEvents(new PlaceListener(), this);
         getServer().getPluginManager().registerEvents(new BreakListener(), this);
+
         getLogger().info("FlagsHPlugin enabled");
     }
 
