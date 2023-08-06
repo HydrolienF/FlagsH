@@ -59,8 +59,9 @@ public class PlaceListener implements Listener {
         p.sendMessage("blocdata: " + data.getAsString());
 
 
-        float offsetToHitTheWall = getOffsetToHitWall(behind);
-        float offsetToMergeTextureTogether = 0.02f;
+        float size = (int) (Math.random() * 10);
+        float offsetToHitTheWall = getOffsetToHitWall(behind) - (0.335f * (size - 1f));
+        float offsetToMergeTextureTogether = 0.02f * size;
         boolean offsetToHitTheWallInX = false;
         float yaw = 0;
         float offsetX = 0;
@@ -97,7 +98,7 @@ public class PlaceListener implements Listener {
         }
         ItemDisplay id1 = createBannerDisplay(banner, itemStack,
                 new Location(banner.getWorld(), banner.getX() + offsetX + 0.5f, banner.getY() + 0.5f, banner.getZ() + offsetZ + 0.5f), yaw,
-                true);
+                true, size);
 
 
         // Remove to 2nd banner
@@ -108,7 +109,7 @@ public class PlaceListener implements Listener {
         }
         ItemDisplay id2 = createBannerDisplay(banner, itemStack,
                 new Location(banner.getWorld(), banner.getX() - offsetX + 0.5f, banner.getY() + 0.5f, banner.getZ() - offsetZ + 0.5f), yaw,
-                false);
+                false, size);
 
 
         // remove the placed banner without droping the item
@@ -152,7 +153,7 @@ public class PlaceListener implements Listener {
 
 
     /** Create 2 item display, rotate them and place them where the banner is. */
-    private ItemDisplay createBannerDisplay(Block banner, ItemStack itemStack, Location location, float yaw, boolean isFirst) {
+    private ItemDisplay createBannerDisplay(Block banner, ItemStack itemStack, Location location, float yaw, boolean isFirst, float size) {
         // BlockDisplay don't work with banners
         ItemDisplay itemDisplay = banner.getWorld().spawn(location, ItemDisplay.class);
         itemDisplay.setItemStack(itemStack);
@@ -162,7 +163,7 @@ public class PlaceListener implements Listener {
                     0, -1, 0, 0,
                     -1, 0, 0, 0,
                     0, 0, 1, 0,
-                    0, 0, 0, 1));
+                    0, 0, 0, 1/size));
             // @formatter:on
         } else {
             // @formatter:off
@@ -170,7 +171,7 @@ public class PlaceListener implements Listener {
                     0, 1, 0, 0,
                     1, 0, 0, 0,
                     0, 0, 1, 0,
-                    0, 0, 0, 1));
+                    0, 0, 0, 1/size));
             // @formatter:on
         }
 
