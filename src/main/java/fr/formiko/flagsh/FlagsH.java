@@ -128,6 +128,8 @@ public class FlagsH {
         // banner.setType(Material.AIR);
         banner.setMetadata("flag", new FixedMetadataValue(plugin, id1.getUniqueId() + "," + id2.getUniqueId()));
         banner.setMetadata("flagSize", new FixedMetadataValue(plugin, size));
+        // TODO change the banner texture to an invisible one so that player can still break it or extends the flag but won't see the
+        // banner.
     }
 
     /** Return the offset to hit the wall depending on the block behind. */
@@ -163,11 +165,11 @@ public class FlagsH {
                     0, 1, 0, 0,
                     1, 0, 0, 0,
                     0, 0, 1, 0,
-                    0, 0, 0, 1/size));
+                    0, 0, 0, -1/size));
             // @formatter:on
         }
 
-        itemDisplay.setRotation(yaw + (isFirst ? 0 : 180), 0);
+        itemDisplay.setRotation(yaw, 0);
         return itemDisplay;
     }
 
