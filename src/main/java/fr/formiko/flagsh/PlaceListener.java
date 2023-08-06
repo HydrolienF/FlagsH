@@ -25,7 +25,7 @@ public class PlaceListener implements Listener {
             int difY = event.getBlock().getY() - event.getBlockAgainst().getY();
             int difZ = event.getBlock().getZ() - event.getBlockAgainst().getZ();
             Block behind = event.getBlockAgainst().getRelative(-difX, -difY, -difZ);
-            FlagsH.extendsFlag(event.getPlayer(), event.getBlockAgainst(), behind, event.getItemInHand());
+            FlagsH.extendsFlag(event.getPlayer(), event.getBlockAgainst(), behind, event.getItemInHand(), event.getBlockPlaced());
             event.getBlockPlaced().setType(Material.AIR);
         } else {
             event.getPlayer().sendMessage("FlagsH: creating flag");

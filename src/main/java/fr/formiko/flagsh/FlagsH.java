@@ -184,11 +184,17 @@ public class FlagsH {
     }
 
     // extends --------------------------------------------------------------------------------------------------------
-    public static void extendsFlag(Player p, Block banner, Block behind, ItemStack itemStack) {
-        removeFlagIfNeeded(banner, false);
-        createFlag(p, banner, behind, itemStack,
-                (float) Math.min(banner.getMetadata("flagSize").get(0).asFloat() + plugin.getConfig().getDouble("increasingSizeStep"),
-                        plugin.getConfig().getDouble("maxFlagSize")));
+    public static void extendsFlag(Player p, Block banner, Block behind, ItemStack itemStack, Block blockPlaced) {
+        if (banner.getMetadata("flagSize").get(0).asFloat() == plugin.getConfig().getDouble("maxFlagSize")) {
+            p.sendMessage("Flag already at max size");
+            blockPlaced.breakNaturally();
+        } else {
+            removeFlagIfNeeded(banner, false);
+            createFlag(p, banner, behind, itemStack,
+                    (float) Math.min(banner.getMetadata("flagSize").get(0).asFloat() + plugin.getConfig().getDouble("increasingSizeStep"),
+                            plugin.getConfig().getDouble("maxFlagSize")));
+            p.sendMessage("Flag extended from " + plugin.getConfig().getDouble("increasingSizeStep"));
+        }
     }
 
 }
