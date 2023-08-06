@@ -60,6 +60,8 @@ public class FlagsH {
                 block.removeMetadata("flagSize", plugin);
             }
         }
+        // TODO don't drop the transparent banner
+        // TODO drop the banner that the player have used
     }
     public static void removeFlagIfNeeded(Block block) { removeFlagIfNeeded(block, true); }
 
