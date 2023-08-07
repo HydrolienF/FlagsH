@@ -41,22 +41,32 @@ public class FlagsH {
 
 
     // remove ---------------------------------------------------------------------------------------------------------
-    public static void removeFlagIfNeeded(Block block, boolean removeSize) {
+    public static void removeFlagIfNeeded(Block block, boolean removeForReal) {
         if (!FlagsH.ALL_WALL_BANNERS.contains(block.getType())) {
             return;
         }
         plugin.getLogger().info("You broke a wall banner in " + block.getLocation() + " " + block.getType().toString());
         // get metadata from the broken block
         if (block.hasMetadata("flag")) {
+            ItemStack item = null;
             plugin.getLogger().info("flag metadata: " + block.getMetadata("flag").get(0).asString());
             String[] t = block.getMetadata("flag").get(0).asString().split(",");
             for (String s : t) {
                 plugin.getLogger().info("removing entity " + s);
                 UUID id = UUID.fromString(s);
+                if (block.getWorld().getEntity(id) instanceof ItemDisplay itemDisplay) {
+                    item = itemDisplay.getItemStack();
+                }
                 block.getWorld().getEntity(id).remove();
             }
             block.removeMetadata("flag", plugin);
-            if (removeSize) {
+            if (removeForReal) {
+                if (item == null) {
+                    item = new ItemStack(Material.WHITE_BANNER);
+                }
+                item.setAmount((int) (1
+                        + (block.getMetadata("flagSize").get(0).asFloat() - 1) / plugin.getConfig().getDouble("increasingSizeStep")));
+                block.getWorld().dropItem(block.getLocation(), item);
                 block.removeMetadata("flagSize", plugin);
             }
         }
