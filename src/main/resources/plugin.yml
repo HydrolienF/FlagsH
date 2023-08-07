@@ -3,5 +3,5 @@ version: 0.1.3
 main: fr.formiko.flagsh.FlagsHPlugin
 description: Display banners as flags
 author: Hydrolien
-website: https://papermc.io
+website: https://github.com/HydrolienF/FlagsH
 api-version: '1.20'
