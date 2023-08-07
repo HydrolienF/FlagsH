@@ -5,9 +5,6 @@ import java.util.UUID;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.data.BlockData;
-import org.bukkit.block.data.Directional;
 import org.bukkit.entity.ItemDisplay;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -39,27 +36,30 @@ public class FlagsH {
             Material.RED_SANDSTONE_WALL, Material.SANDSTONE_WALL, Material.MOSSY_COBBLESTONE_WALL, Material.MOSSY_STONE_BRICK_WALL,
             Material.END_STONE_BRICK_WALL, Material.COBBLED_DEEPSLATE_WALL, Material.MUD_BRICK_WALL);
 
+    private FlagsH() {}
 
     // remove ---------------------------------------------------------------------------------------------------------
     public static void removeFlagIfNeeded(Block block, boolean removeForReal) {
-        if (!FlagsH.ALL_WALL_BANNERS.contains(block.getType())) {
+        if (!block.hasMetadata("flag")) {
             return;
         }
-        plugin.getLogger().info("You broke a wall banner in " + block.getLocation() + " " + block.getType().toString());
+
+        // plugin.getLogger().info("You broke a wall banner in " + block.getLocation() + " " + block.getType().toString());
         // get metadata from the broken block
         if (block.hasMetadata("flag")) {
+            // remove each DisplayItem entity that represents the flag
             ItemStack item = null;
-            plugin.getLogger().info("flag metadata: " + block.getMetadata("flag").get(0).asString());
+            // plugin.getLogger().info("flag metadata: " + block.getMetadata("flag").get(0).asString());
             String[] t = block.getMetadata("flag").get(0).asString().split(",");
             for (String s : t) {
-                plugin.getLogger().info("removing entity " + s);
+                // plugin.getLogger().info("removing entity " + s);
                 UUID id = UUID.fromString(s);
                 if (block.getWorld().getEntity(id) instanceof ItemDisplay itemDisplay) {
                     item = itemDisplay.getItemStack();
                 }
                 block.getWorld().getEntity(id).remove();
             }
-            block.removeMetadata("flag", plugin);
+            // drop item & forget metadata
             if (removeForReal) {
                 if (item == null) {
                     item = new ItemStack(Material.WHITE_BANNER);
@@ -67,22 +67,15 @@ public class FlagsH {
                 item.setAmount((int) (1
                         + (block.getMetadata("flagSize").get(0).asFloat() - 1) / plugin.getConfig().getDouble("increasingSizeStep")));
                 block.getWorld().dropItem(block.getLocation(), item);
+                block.removeMetadata("flag", plugin);
                 block.removeMetadata("flagSize", plugin);
             }
         }
-        // TODO don't drop the transparent banner
-        // TODO drop the banner that the player have used
     }
     public static void removeFlagIfNeeded(Block block) { removeFlagIfNeeded(block, true); }
 
     // create ---------------------------------------------------------------------------------------------------------
     public static void createFlag(Player p, Block banner, Block behind, ItemStack itemStack, float size) {
-        BlockData data = banner.getBlockData();
-        p.sendMessage("You placed a wall banner in sneak in " + banner.getLocation() + " " + banner.getType().toString() + " on "
-                + behind.getType().toString() + " at " + behind.getLocation());
-        p.sendMessage("blocdata: " + data.getAsString());
-
-
         float offsetToHitTheWall = getOffsetToHitWall(behind) - (0.335f * (size - 1f));
         float offsetToMergeTextureTogether = 0.02f * size;
         boolean offsetToHitTheWallInX = false;
@@ -90,28 +83,22 @@ public class FlagsH {
         float offsetX = 0;
         float offsetZ = 0;
         if (behind.getX() > banner.getX()) {
-            // p.sendMessage("behind.getX() > banner.getX()");
             yaw = 0;
             offsetZ = offsetToMergeTextureTogether;
             offsetToHitTheWallInX = true;
         } else if (behind.getX() < banner.getX()) {
-            // p.sendMessage("behind.getX() < banner.getX()");
             yaw = 180;
             offsetZ = -offsetToMergeTextureTogether;
             offsetToHitTheWallInX = true;
             offsetToHitTheWall = -offsetToHitTheWall;
         } else if (behind.getZ() > banner.getZ()) {
-            // p.sendMessage("behind.getZ() > banner.getZ()");
             yaw = 90;
             offsetX = -offsetToMergeTextureTogether;
         } else if (behind.getZ() < banner.getZ()) {
-            // p.sendMessage("behind.getZ() < banner.getZ()");
             yaw = -90;
             offsetX = offsetToMergeTextureTogether;
             offsetToHitTheWall = -offsetToHitTheWall;
         }
-
-        // p.sendMessage("yaw: " + yaw + "");
 
         // Add to 1st banner
         if (offsetToHitTheWallInX) {
@@ -139,18 +126,9 @@ public class FlagsH {
         // banner.setType(Material.AIR);
         banner.setMetadata("flag", new FixedMetadataValue(plugin, id1.getUniqueId() + "," + id2.getUniqueId()));
         banner.setMetadata("flagSize", new FixedMetadataValue(plugin, size));
-        // TODO change the banner texture to an invisible one so that player can still break it or extends the flag but won't see the
-        // banner texture
 
-        if (banner.getBlockData() instanceof Directional oldDirectional) {
-            p.sendMessage("directional: " + oldDirectional.getFacing().toString());
-            BlockFace blockFace = oldDirectional.getFacing();
-            banner.setType(Material.BLACK_WALL_BANNER);
-            Directional newDirectional = (Directional) banner.getBlockData();
-            newDirectional.setFacing(blockFace);
-            p.sendMessage("new directional: " + newDirectional.getFacing().toString());
-            banner.setBlockData(newDirectional);
-        }
+        // behind.setMetadata("flagOnIt", new FixedMetadataValue(plugin,
+        // banner.getLocation().getX() + "," + banner.getLocation().getY() + "," + banner.getLocation().getZ()));
 
     }
 
@@ -196,10 +174,10 @@ public class FlagsH {
     }
 
     // extends --------------------------------------------------------------------------------------------------------
-    public static void extendsFlag(Player p, Block banner, Block behind, ItemStack itemStack, Block blockPlaced) {
+    public static void extendsFlag(Player p, Block banner, Block behind, ItemStack itemStack) {
         if (banner.getMetadata("flagSize").get(0).asFloat() == plugin.getConfig().getDouble("maxFlagSize")) {
-            p.sendMessage("Flag already at max size");
-            blockPlaced.breakNaturally();
+            p.sendMessage("Flag already at max size (" + plugin.getConfig().getDouble("maxFlagSize") + ")");
+            banner.breakNaturally();
         } else {
             removeFlagIfNeeded(banner, false);
             createFlag(p, banner, behind, itemStack,

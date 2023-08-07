@@ -14,7 +14,6 @@ public class FlagsHPlugin extends JavaPlugin {
         saveConfig();
 
         getServer().getPluginManager().registerEvents(new PlaceListener(), this);
-        getServer().getPluginManager().registerEvents(new BreakListener(), this);
 
         getLogger().info("FlagsHPlugin enabled");
     }
