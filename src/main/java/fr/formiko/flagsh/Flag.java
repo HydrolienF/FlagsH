@@ -69,7 +69,6 @@ public class Flag implements Serializable {
         boolean offsetToHitTheWallInX = false;
         float offsetX = 0;
         float offsetZ = 0;
-        float offsetXOrZInteraction = -0.5f;
         if (yaw == 0) {
             offsetZ = offsetToMergeTextureTogether;
             offsetToHitTheWallInX = true;
@@ -77,23 +76,36 @@ public class Flag implements Serializable {
             offsetZ = -offsetToMergeTextureTogether;
             offsetToHitTheWallInX = true;
             offsetToHitTheWall = -offsetToHitTheWall;
-            offsetXOrZInteraction = -offsetXOrZInteraction;
         } else if (yaw == 90) {
             offsetX = -offsetToMergeTextureTogether;
         } else if (yaw == -90) {
             offsetX = offsetToMergeTextureTogether;
             offsetToHitTheWall = -offsetToHitTheWall;
-            offsetXOrZInteraction = -offsetXOrZInteraction;
         }
 
-        Location interactionLoc = new Location(getWorld(), getX() + offsetX + 0.5f + (offsetToHitTheWallInX ? offsetXOrZInteraction : 0),
-                getY() + 0.5f - size / 2, getZ() + offsetZ + 0.5f + (!offsetToHitTheWallInX ? offsetXOrZInteraction : 0));
 
         // Add to 1st banner
         if (offsetToHitTheWallInX) {
             offsetX += offsetToHitTheWall;
         } else {
             offsetZ += offsetToHitTheWall;
+        }
+
+        for (int i = 0; i < 10; i++) {
+            float hitboxSize = 0.2f * size;
+            Location interactionLoc = new Location(getWorld(), getX() + offsetX + 0.5f, getY() + 0.5f - size / 2, getZ() + offsetZ + 0.5f);
+            float offsetOfHitbox = hitboxSize * (i - 2);
+            if (yaw == 0) {
+                interactionLoc.setX(interactionLoc.getX() - offsetOfHitbox);
+            } else if (yaw == 180) {
+                interactionLoc.setX(interactionLoc.getX() + offsetOfHitbox);
+            } else if (yaw == 90) {
+                interactionLoc.setZ(interactionLoc.getZ() - offsetOfHitbox);
+            } else if (yaw == -90) {
+                interactionLoc.setZ(interactionLoc.getZ() + offsetOfHitbox);
+            }
+            Interaction interaction = createInteraction(interactionLoc, hitboxSize, 0.95f * size);
+            interactionsIds.add(interaction.getUniqueId());
         }
         ItemDisplay id1 = createBannerDisplay(itemStack,
                 new Location(getWorld(), getX() + offsetX + 0.5f, getY() + 0.5f, getZ() + offsetZ + 0.5f), yaw, true, size);
@@ -109,11 +121,8 @@ public class Flag implements Serializable {
                 new Location(getWorld(), getX() - offsetX + 0.5f, getY() + 0.5f, getZ() - offsetZ + 0.5f), yaw, false, size);
 
 
-        Interaction interaction = createInteraction(interactionLoc, 0.2f * size * 10, 0.95f * size); // TODO remove "* 10"
-
         itemDisplaysIds.add(id1.getUniqueId());
         itemDisplaysIds.add(id2.getUniqueId());
-        interactionsIds.add(interaction.getUniqueId());
     }
 
     public void extend(float newSize) {

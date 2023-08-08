@@ -17,7 +17,7 @@ public class FlagsHListener implements Listener {
      */
     @EventHandler
     public void onPlace(BlockPlaceEvent event) {
-        // TODO replace "&& event.getPlayer().isSneaking()" to make banner display.
+        // TODO replace "&& event.getPlayer().isSneaking()" to make bigger banner display.
         // if player is placing a wall banner while sneaking
         if (FlagsH.ALL_WALL_BANNERS.contains(event.getBlock().getType()) && event.getPlayer().isSneaking()) {
             Flag flag = FlagsH.getFlagAt(event.getBlock().getLocation());
@@ -38,8 +38,6 @@ public class FlagsHListener implements Listener {
         // if player click with a banner on hand on a flag : extend the flag
         if (FlagsH.ALL_BANNERS.contains(item.getType())) {
 
-            // event.getPlayer().sendMessage("Interacting with flag via entity");
-            // FlagsH.interactWithFlag(event.getPlayer(), event.getRightClicked());
             Flag flag = FlagsH.getFlagLinkedToEntity(event.getRightClicked());
             if (flag != null) {
                 FlagsH.extendsFlag(flag, null, event.getPlayer());
@@ -54,10 +52,5 @@ public class FlagsHListener implements Listener {
             event.setCancelled(true);
             flag.remove();
         }
-
-        // if (event.getDamager() instanceof Player && event.getEntity().hasMetadata("flagCoord")) {
-        // event.setCancelled(true);
-        // FlagsH.removeFlagIfNeeded(event.getEntity());
-        // }
     }
 }
