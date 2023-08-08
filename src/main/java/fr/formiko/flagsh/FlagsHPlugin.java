@@ -14,7 +14,7 @@ import org.bukkit.util.io.BukkitObjectOutputStream;
 
 public class FlagsHPlugin extends JavaPlugin {
     private List<Flag> flags;
-    private static final String flagsFilePath = "plugins/FlagsH/flags.data";
+    private static final String FLAGS_FILE_PATH = "plugins/FlagsH/flags.data";
 
     public List<Flag> getFlags() { return flags; }
 
@@ -32,7 +32,7 @@ public class FlagsHPlugin extends JavaPlugin {
         saveConfig();
 
         // create the file if it doesn't exist
-        if (new File(flagsFilePath).exists()) {
+        if (new File(FLAGS_FILE_PATH).exists()) {
             loadFlags();
         } else {
             flags = new ArrayList<>();
@@ -48,7 +48,7 @@ public class FlagsHPlugin extends JavaPlugin {
 
 
     public boolean saveFlags() {
-        try (BukkitObjectOutputStream out = new BukkitObjectOutputStream(new GZIPOutputStream(new FileOutputStream(flagsFilePath)))) {
+        try (BukkitObjectOutputStream out = new BukkitObjectOutputStream(new GZIPOutputStream(new FileOutputStream(FLAGS_FILE_PATH)))) {
             out.writeObject(flags);
             return true;
         } catch (IOException e) {
@@ -58,7 +58,7 @@ public class FlagsHPlugin extends JavaPlugin {
     }
     @SuppressWarnings("unchecked")
     public boolean loadFlags() {
-        try (BukkitObjectInputStream in = new BukkitObjectInputStream(new GZIPInputStream(new FileInputStream(flagsFilePath)))) {
+        try (BukkitObjectInputStream in = new BukkitObjectInputStream(new GZIPInputStream(new FileInputStream(FLAGS_FILE_PATH)))) {
             flags = (List) in.readObject();
             return true;
         } catch (ClassNotFoundException | IOException e) {
