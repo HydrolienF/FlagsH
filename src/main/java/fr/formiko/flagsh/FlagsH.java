@@ -42,39 +42,6 @@ public class FlagsH {
 
     private FlagsH() {}
 
-    // remove ---------------------------------------------------------------------------------------------------------
-    // public static void removeFlagIfNeeded(Block block, boolean removeForReal) {
-    // // plugin.getLogger().info("You broke a wall banner in " + block.getLocation() + " " + block.getType().toString());
-    // // get metadata from the broken block
-    // if (block.hasMetadata("flag")) {
-    // ItemStack item = null;
-    // if (removeForReal) {
-    // // playSound(block, Sound.BLOCK_WOOD_BREAK);
-    // item = bannerBlockToItemStack(block);
-    // }
-    // // remove each DisplayItem entity that represents the flag
-    // String[] t = block.getMetadata("flag").get(0).asString().split(",");
-    // for (String s : t) {
-    // // plugin.getLogger().info("removing entity " + s);
-    // block.getWorld().getEntity(UUID.fromString(s)).remove();
-    // }
-    // block.getWorld().getEntity(UUID.fromString(block.getMetadata("flagInteraction").get(0).asString())).remove();
-
-    // // drop item & forget metadata
-    // if (removeForReal) {
-    // item.setAmount((int) (1
-    // + (block.getMetadata("flagSize").get(0).asFloat() - 1) / plugin.getConfig().getDouble("increasingSizeStep")));
-    // block.getWorld().dropItem(block.getLocation(), item);
-    // block.removeMetadata("flag", plugin);
-    // block.removeMetadata("flagSize", plugin);
-    // block.removeMetadata("flagInteraction", plugin);
-    // }
-    // }
-    // }
-    // public static void removeFlagIfNeeded(Block block) { removeFlagIfNeeded(block, true); }
-    // public static void removeFlagIfNeeded(Entity entity) {
-    // removeFlagIfNeeded(coordToBlock(entity.getMetadata("flagCoord").get(0).asString(), entity.getWorld()));
-    // }
 
     // create ---------------------------------------------------------------------------------------------------------
     public static void createFlag(Player p, Block banner, Block behind, ItemStack itemStack, float size) {
@@ -127,24 +94,6 @@ public class FlagsH {
 
 
     // Usefull methods ------------------------------------------------------------------------------------------------
-    public static String blockToCoord(Block block) {
-        return ((int) block.getLocation().getX()) + "," + ((int) block.getLocation().getY()) + "," + ((int) block.getLocation().getZ());
-    }
-    public static Block coordToBlock(String coord, World world) {
-        String[] split = coord.split(",");
-        return world.getBlockAt(Integer.parseInt(split[0]), Integer.parseInt(split[1]), Integer.parseInt(split[2]));
-    }
-
-    // public static ItemStack bannerBlockToItemStack(Block block) {
-    // if (block.hasMetadata("flag")) {
-    // for (String s : block.getMetadata("flag").get(0).asString().split(",")) {
-    // if (block.getWorld().getEntity(UUID.fromString(s)) instanceof ItemDisplay itemDisplay) {
-    // return itemDisplay.getItemStack();
-    // }
-    // }
-    // }
-    // return new ItemStack(Material.WHITE_BANNER);
-    // }
 
     public static Flag getFlagAt(int x, int y, int z, World world) {
         for (Flag flag : plugin.getFlags()) {
