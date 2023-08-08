@@ -1,11 +1,20 @@
 package fr.formiko.flagsh;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.io.BukkitObjectInputStream;
+import org.bukkit.util.io.BukkitObjectOutputStream;
 
 public class FlagsHPlugin extends JavaPlugin {
     private List<Flag> flags;
+    private static final String flagsFilePath = "plugins/FlagsH/flags.data";
 
     public List<Flag> getFlags() { return flags; }
 
@@ -22,17 +31,39 @@ public class FlagsHPlugin extends JavaPlugin {
         getConfig().options().copyDefaults(true);
         saveConfig();
 
-        // TODO load flags from file
-        flags = new ArrayList<>();
+        // create the file if it doesn't exist
+        if (new File(flagsFilePath).exists()) {
+            loadFlags();
+        } else {
+            flags = new ArrayList<>();
+        }
+        getLogger().info("FlagsH loaded " + flags.size() + " flags.");
+
 
         getServer().getPluginManager().registerEvents(new FlagsHListener(), this);
-
-        getLogger().info("FlagsHPlugin enabled");
     }
 
     @Override
-    public void onDisable() { getLogger().info("FlagsHPlugin disabled"); }
+    public void onDisable() { saveFlags(); }
 
-    @Override
-    public void onLoad() { getLogger().info("FlagsHPlugin loaded"); }
+
+    public boolean saveFlags() {
+        try (BukkitObjectOutputStream out = new BukkitObjectOutputStream(new GZIPOutputStream(new FileOutputStream(flagsFilePath)))) {
+            out.writeObject(flags);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    @SuppressWarnings("unchecked")
+    public boolean loadFlags() {
+        try (BukkitObjectInputStream in = new BukkitObjectInputStream(new GZIPInputStream(new FileInputStream(flagsFilePath)))) {
+            flags = (List) in.readObject();
+            return true;
+        } catch (ClassNotFoundException | IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

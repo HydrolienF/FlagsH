@@ -90,7 +90,6 @@ public class Flag implements Serializable {
         } else {
             offsetZ += offsetToHitTheWall;
         }
-
         for (int i = 0; i < 10; i++) {
             float hitboxSize = 0.2f * size;
             Location interactionLoc = new Location(getWorld(), getX() + offsetX + 0.5f, getY() + 0.5f - size / 2, getZ() + offsetZ + 0.5f);
