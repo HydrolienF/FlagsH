@@ -1,1 +1,0 @@
-Create flag that are display as banner.

@@ -99,7 +99,7 @@ public class Flag implements Serializable {
             addInteractionForFlag();
         } else {
             addItemDisplayForBanner(itemStack, offsetToHitTheWall, offsetToHitTheWallInX);
-            addInteractionForBanner();
+            addInteractionForBanner(offsetToHitTheWall, offsetToHitTheWallInX);
         }
 
     }
@@ -167,25 +167,28 @@ public class Flag implements Serializable {
             interactionsIds.add(interaction.getUniqueId());
         }
     }
-    private void addInteractionForBanner() {
+    private void addInteractionForBanner(float offsetToHitTheWall, boolean offsetToHitTheWallInX) {
         // TODO complete hitbox matching texture
+
         FlagsH.plugin.getLogger().info("yaw=" + yaw);
         for (int i = 0; i < 5; i++) {
             float hitboxSize = 0.2f * size;
-            Location interactionLoc = new Location(getWorld(), getX() + hitboxSize / 2, getY() + 0.5f - (size * 1.5f),
+            Location interactionLoc = new Location(getWorld(), getX() + hitboxSize / 2, getY() + 0.8f - (size * 1.8f),
                     getZ() + hitboxSize / 2);
 
             float offsetOfHitbox = hitboxSize * i;
             if (yaw == 0) {
-                interactionLoc.setZ(interactionLoc.getZ() - offsetOfHitbox + 1f - hitboxSize);
-                interactionLoc.setX(interactionLoc.getX() + 1f - hitboxSize);
+                interactionLoc.setZ(interactionLoc.getZ() - offsetOfHitbox + 1f - hitboxSize + 0.5f * (size - 1f));
+                interactionLoc.setX(interactionLoc.getX() + 1f - hitboxSize + offsetToFitTheWall - 0.18f * 2);
             } else if (yaw == 180) {
-                interactionLoc.setZ(interactionLoc.getZ() + offsetOfHitbox);
+                interactionLoc.setZ(interactionLoc.getZ() + offsetOfHitbox - 0.5f * (size - 1f));
+                interactionLoc.setX(interactionLoc.getX() - offsetToFitTheWall + 0.18f * 2);
             } else if (yaw == 90) {
-                interactionLoc.setX(interactionLoc.getX() - offsetOfHitbox + 1f - hitboxSize);
-                interactionLoc.setZ(interactionLoc.getZ() + 1f - hitboxSize);
+                interactionLoc.setX(interactionLoc.getX() - offsetOfHitbox + 1f - hitboxSize + 0.5f * (size - 1f));
+                interactionLoc.setZ(interactionLoc.getZ() + 1f - hitboxSize + offsetToFitTheWall - 0.18f * 2);
             } else if (yaw == -90) {
-                interactionLoc.setX(interactionLoc.getX() + offsetOfHitbox);
+                interactionLoc.setX(interactionLoc.getX() + offsetOfHitbox - 0.5f * (size - 1f));
+                interactionLoc.setZ(interactionLoc.getZ() - offsetToFitTheWall + 0.18f * 2);
             }
             Interaction interaction = createInteraction(interactionLoc, hitboxSize, 0.95f * size * 2);
             interactionsIds.add(interaction.getUniqueId());
