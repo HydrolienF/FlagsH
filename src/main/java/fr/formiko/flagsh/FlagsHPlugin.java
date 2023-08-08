@@ -13,7 +13,7 @@ public class FlagsHPlugin extends JavaPlugin {
         getConfig().options().copyDefaults(true);
         saveConfig();
 
-        getServer().getPluginManager().registerEvents(new PlaceListener(), this);
+        getServer().getPluginManager().registerEvents(new FlagsHListener(), this);
 
         getLogger().info("FlagsHPlugin enabled");
     }
