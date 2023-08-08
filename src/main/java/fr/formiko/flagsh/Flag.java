@@ -99,7 +99,7 @@ public class Flag implements Serializable {
             addInteractionForFlag();
         } else {
             addItemDisplayForBanner(itemStack, offsetToHitTheWall, offsetToHitTheWallInX);
-            addInteractionForBanner(offsetToHitTheWall, offsetToHitTheWallInX);
+            addInteractionForBanner();
         }
 
     }
@@ -167,7 +167,7 @@ public class Flag implements Serializable {
             interactionsIds.add(interaction.getUniqueId());
         }
     }
-    private void addInteractionForBanner(float offsetToHitTheWall, boolean offsetToHitTheWallInX) {
+    private void addInteractionForBanner() {
         // TODO complete hitbox matching texture
 
         FlagsH.plugin.getLogger().info("yaw=" + yaw);
