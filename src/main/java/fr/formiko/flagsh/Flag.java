@@ -170,7 +170,6 @@ public class Flag implements Serializable {
     private void addInteractionForBanner() {
         // TODO complete hitbox matching texture
 
-        FlagsH.plugin.getLogger().info("yaw=" + yaw);
         for (int i = 0; i < 5; i++) {
             float hitboxSize = 0.2f * size;
             Location interactionLoc = new Location(getWorld(), getX() + hitboxSize / 2, getY() + 0.8f - (size * 1.8f),
