@@ -27,6 +27,19 @@ public class Flag implements Serializable {
     private final boolean flagNotBanner; // false = banner, true = flag
     // private final ItemStack itemStack;
 
+    /**
+     * Create a flag or banner.
+     * It will be display with ItemDisplay entities.
+     * It will have an hitbox with Interaction entities.
+     * 
+     * @param x                  x coordinate of the flag
+     * @param y                  y coordinate of the flag
+     * @param z                  z coordinate of the flag
+     * @param worldId            world id of the flag
+     * @param flagNotBanner      true if the flag is a flag, false if it's a banner
+     * @param yaw                yaw of the flag
+     * @param offsetToFitTheWall offset to place flag against the wall
+     */
     public Flag(int x, int y, int z, UUID worldId, boolean flagNotBanner, int yaw, float offsetToFitTheWall) {
         this.x = x;
         this.y = y;
@@ -63,6 +76,11 @@ public class Flag implements Serializable {
     }
 
 
+    /**
+     * Create the flag minecraft entities that will be displayed & used as hitbox.
+     * 
+     * @param itemStack item witch texture will be used
+     */
     public void create(ItemStack itemStack) {
         float offsetToHitTheWall = offsetToFitTheWall - (0.335f * (size - 1f));
         float offsetToMergeTextureTogether = 0.02f * size;
@@ -124,6 +142,11 @@ public class Flag implements Serializable {
         itemDisplaysIds.add(id2.getUniqueId());
     }
 
+    /**
+     * Extends the flag.
+     * 
+     * @param newSize new size of the flag
+     */
     public void extend(float newSize) {
         ItemStack itemStack = getItemStack();
         removeEntities();
@@ -132,6 +155,10 @@ public class Flag implements Serializable {
         playSound(Sound.BLOCK_WOOL_PLACE);
     }
 
+    /**
+     * Remove the flag.
+     * It remove the entities and remove the flag from the list of flags.
+     */
     public void remove() {
         ItemStack item = getItemStack().clone();
         item.setAmount((int) (1 + (getSize() - 1) / FlagsH.plugin.getConfig().getDouble("increasingSizeStep")));
@@ -142,6 +169,13 @@ public class Flag implements Serializable {
     }
 
     // private methods ------------------------------------------------------------------------------------------------
+    /**
+     * Calculate the yaw of the flag from the banner and the block behind coordinates.
+     * 
+     * @param banner banner block
+     * @param behind block behind the banner
+     * @return
+     */
     private static int getYawFromBehindAndBannerBlocks(Block banner, Block behind) {
         if (behind.getX() > banner.getX()) {
             return 0;
@@ -158,6 +192,9 @@ public class Flag implements Serializable {
         }
     }
 
+    /**
+     * Remove the entities of the flag.
+     */
     private void removeEntities() {
         for (UUID id : itemDisplaysIds) {
             FlagsH.plugin.getServer().getEntity(id).remove();
@@ -169,8 +206,14 @@ public class Flag implements Serializable {
         interactionsIds.clear();
     }
 
+    /**
+     * Play a sound at the flag location.
+     * 
+     * @param sound sound to play
+     */
     public void playSound(Sound sound) { getWorld().playSound(new Location(getWorld(), x, y, z), sound, SoundCategory.BLOCKS, 1, 0); }
 
+    /** Create an interaction at the given location. */
     private static Interaction createInteraction(Location location, float width, float height) {
         Interaction interaction = location.getWorld().spawn(location, Interaction.class);
         interaction.setInteractionWidth(width);
@@ -179,7 +222,7 @@ public class Flag implements Serializable {
         interaction.setPersistent(true);
         return interaction;
     }
-    /** Create 2 item display, rotate them and place them where the banner is. */
+    /** Create item display, rotate it and place it where the banner is. */
     private ItemDisplay createBannerDisplay(ItemStack itemStack, Location location, float yaw, boolean isFirst, float size) {
         // BlockDisplay don't work with banners
         ItemDisplay itemDisplay = getWorld().spawn(location, ItemDisplay.class);

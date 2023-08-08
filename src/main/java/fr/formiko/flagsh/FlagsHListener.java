@@ -31,7 +31,11 @@ public class FlagsHListener implements Listener {
         }
     }
 
-
+    /**
+     * React to player right clicking on a flag entity with a banner in hand.
+     * 
+     * @param event
+     */
     @EventHandler
     public void onInteractWithFlagEntity(PlayerInteractEntityEvent event) {
         ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
@@ -45,6 +49,11 @@ public class FlagsHListener implements Listener {
         }
     }
 
+    /**
+     * React to player hitting a flag entity.
+     * 
+     * @param event
+     */
     @EventHandler
     public void onHitFlagEntity(EntityDamageByEntityEvent event) {
         Flag flag = FlagsH.getFlagLinkedToEntity(event.getEntity());
