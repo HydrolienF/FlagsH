@@ -24,8 +24,8 @@ public class FlagsHPlugin extends JavaPlugin {
 
         getConfig().addDefault("maxFlagSize", 5f);
         getConfig().addDefault("increasingSizeStep", 0.5f);
-        // TODO add a boolean to allow or not the creation of bigger banners
-        // TODO add a boolean to allow or not the creation of bigger flags
+        getConfig().addDefault("flagEnable", true);
+        getConfig().addDefault("bannerEnable", true);
         // TODO add a boolean to allow or not the extention of the flag with wool instead of banner
         // TODO add a boolean to allow or not reduction of the size with a shear
         getConfig().options().copyDefaults(true);

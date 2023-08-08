@@ -45,9 +45,6 @@ public class FlagsH {
 
     // create ---------------------------------------------------------------------------------------------------------
     public static void createFlag(Player p, Block banner, Block behind, ItemStack itemStack, float size) {
-        if (!p.isSneaking()) {
-            return;
-        }
         Flag f = new Flag(banner, p.isSneaking(), behind);
         f.create(itemStack);
         plugin.getFlags().add(f);

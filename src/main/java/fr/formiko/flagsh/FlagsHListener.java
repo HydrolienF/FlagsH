@@ -19,10 +19,14 @@ public class FlagsHListener implements Listener {
     public void onPlace(BlockPlaceEvent event) {
         // TODO replace "&& event.getPlayer().isSneaking()" to make bigger banner display.
         // if player is placing a wall banner while sneaking
-        if (FlagsH.ALL_WALL_BANNERS.contains(event.getBlock().getType()) && event.getPlayer().isSneaking()) {
+        if (FlagsH.ALL_WALL_BANNERS.contains(event.getBlock().getType())) {
             Flag flag = FlagsH.getFlagAt(event.getBlock().getLocation());
             if (flag == null) {
-                event.getPlayer().sendMessage("Creating flag");
+                boolean flagNotBanner = event.getPlayer().isSneaking();
+                if ((flagNotBanner && !FlagsH.plugin.getConfig().getBoolean("flagEnable"))
+                        || (!flagNotBanner && !FlagsH.plugin.getConfig().getBoolean("bannerEnable"))) {
+                    return;
+                }
                 FlagsH.createFlag(event.getPlayer(), event.getBlockPlaced(), event.getBlockAgainst(), event.getItemInHand(), 1f);
             } else {
                 FlagsH.extendsFlag(flag, event.getBlockPlaced(), null);

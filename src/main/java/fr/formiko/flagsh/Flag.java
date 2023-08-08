@@ -54,7 +54,7 @@ public class Flag implements Serializable {
     }
     public Flag(Block block, boolean flagNotBanner, Block behind) {
         this(block.getX(), block.getY(), block.getZ(), block.getWorld().getUID(), flagNotBanner,
-                getYawFromBehindAndBannerBlocks(block, behind), FlagsH.getOffsetToHitWall(behind.getType()));
+                getYawFromBehindAndBannerBlocks(block, behind), FlagsH.getOffsetToHitWall(behind.getType()) + (flagNotBanner ? 0f : 0.3f));
     }
 
     public List<UUID> getItemDisplaysIds() { return itemDisplaysIds; }
@@ -82,27 +82,76 @@ public class Flag implements Serializable {
      * @param itemStack item witch texture will be used
      */
     public void create(ItemStack itemStack) {
-        float offsetToHitTheWall = offsetToFitTheWall - (0.335f * (size - 1f));
-        float offsetToMergeTextureTogether = 0.02f * size;
+        float offsetToHitTheWall = offsetToFitTheWall - ((isFlag() ? 0.335f : 0.05f) * (size - 1f));
         boolean offsetToHitTheWallInX = false;
         float offsetX = 0;
         float offsetZ = 0;
         if (yaw == 0) {
-            offsetZ = offsetToMergeTextureTogether;
             offsetToHitTheWallInX = true;
         } else if (yaw == 180) {
-            offsetZ = -offsetToMergeTextureTogether;
             offsetToHitTheWallInX = true;
             offsetToHitTheWall = -offsetToHitTheWall;
-        } else if (yaw == 90) {
-            offsetX = -offsetToMergeTextureTogether;
-        } else if (yaw == -90) {
-            offsetX = offsetToMergeTextureTogether;
+        } else if (yaw == 90) {} else if (yaw == -90) {
             offsetToHitTheWall = -offsetToHitTheWall;
         }
 
 
-        // Add to 1st banner
+        if (isFlag()) {
+            addItemDisplayForFlag(itemStack, offsetX, offsetZ, offsetToHitTheWall, offsetToHitTheWallInX);
+            addInteractionForFlag(offsetToHitTheWall, offsetToHitTheWallInX);
+        } else {
+            addItemDisplayForBanner(itemStack, offsetX, offsetZ, offsetToHitTheWall, offsetToHitTheWallInX);
+            addInteractionForFlag(offsetToHitTheWall, offsetToHitTheWallInX);
+        }
+
+    }
+
+    private void addItemDisplayForFlag(ItemStack itemStack, float offsetX, float offsetZ, float offsetToHitTheWall,
+            boolean offsetToHitTheWallInX) {
+        float offsetToMergeTextureTogether = 0.01f * size;
+        // Add offset to 1st banner
+        if (offsetToHitTheWallInX) {
+            offsetX += offsetToHitTheWall;
+            offsetZ += offsetToMergeTextureTogether;
+        } else {
+            offsetZ += offsetToHitTheWall;
+            offsetX += offsetToMergeTextureTogether;
+        }
+        ItemDisplay id1 = createBannerDisplay(itemStack,
+                new Location(getWorld(), getX() + offsetX + 0.5f, getY() + 0.5f, getZ() + offsetZ + 0.5f), yaw, true, size);
+        itemDisplaysIds.add(id1.getUniqueId());
+
+        // Remove offset to 2nd banner
+        if (offsetToHitTheWallInX) {
+            offsetX -= 2 * offsetToHitTheWall;
+            offsetZ -= 2 * offsetToMergeTextureTogether;
+        } else {
+            offsetZ -= 2 * offsetToHitTheWall;
+            offsetX -= 2 * offsetToMergeTextureTogether;
+        }
+        ItemDisplay id2 = createBannerDisplay(itemStack,
+                new Location(getWorld(), getX() - offsetX + 0.5f, getY() + 0.5f, getZ() - offsetZ + 0.5f), yaw, false, size);
+        itemDisplaysIds.add(id2.getUniqueId());
+    }
+
+    private void addItemDisplayForBanner(ItemStack itemStack, float offsetX, float offsetZ, float offsetToHitTheWall,
+            boolean offsetToHitTheWallInX) {
+        // Add offset to 1st banner
+        if (offsetToHitTheWallInX) {
+            offsetX += offsetToHitTheWall;
+        } else {
+            offsetZ += offsetToHitTheWall;
+        }
+        ItemDisplay id1 = createBannerDisplay(itemStack,
+                new Location(getWorld(), getX() + offsetX + 0.5f, getY() + 1f - (getSize() * 1.335f), getZ() + offsetZ + 0.5f), yaw - 90f,
+                true, size);
+        itemDisplaysIds.add(id1.getUniqueId());
+    }
+
+    private void addInteractionForFlag(float offsetToHitTheWall, boolean offsetToHitTheWallInX) {
+        float offsetX = 0;
+        float offsetZ = 0;
+        // Add offset to 1st banner
         if (offsetToHitTheWallInX) {
             offsetX += offsetToHitTheWall;
         } else {
@@ -110,7 +159,8 @@ public class Flag implements Serializable {
         }
         for (int i = 0; i < 10; i++) {
             float hitboxSize = 0.2f * size;
-            Location interactionLoc = new Location(getWorld(), getX() + offsetX + 0.5f, getY() + 0.5f - size / 2, getZ() + offsetZ + 0.5f);
+            Location interactionLoc = new Location(getWorld(), getX() + 0.5f + offsetX, getY() + 0.5f - size / 2, getZ() + 0.5f + offsetZ);
+
             float offsetOfHitbox = hitboxSize * (i - 2);
             if (yaw == 0) {
                 interactionLoc.setX(interactionLoc.getX() - offsetOfHitbox);
@@ -124,22 +174,6 @@ public class Flag implements Serializable {
             Interaction interaction = createInteraction(interactionLoc, hitboxSize, 0.95f * size);
             interactionsIds.add(interaction.getUniqueId());
         }
-        ItemDisplay id1 = createBannerDisplay(itemStack,
-                new Location(getWorld(), getX() + offsetX + 0.5f, getY() + 0.5f, getZ() + offsetZ + 0.5f), yaw, true, size);
-
-
-        // Remove to 2nd banner
-        if (offsetToHitTheWallInX) {
-            offsetX -= 2 * offsetToHitTheWall;
-        } else {
-            offsetZ -= 2 * offsetToHitTheWall;
-        }
-        ItemDisplay id2 = createBannerDisplay(itemStack,
-                new Location(getWorld(), getX() - offsetX + 0.5f, getY() + 0.5f, getZ() - offsetZ + 0.5f), yaw, false, size);
-
-
-        itemDisplaysIds.add(id1.getUniqueId());
-        itemDisplaysIds.add(id2.getUniqueId());
     }
 
     /**
@@ -227,7 +261,8 @@ public class Flag implements Serializable {
         // BlockDisplay don't work with banners
         ItemDisplay itemDisplay = getWorld().spawn(location, ItemDisplay.class);
         itemDisplay.setItemStack(itemStack);
-        if (isFirst) {
+        if (isFlag()) {
+            if (isFirst) {
             // @formatter:off
             itemDisplay.setTransformationMatrix(new Matrix4f(
                     0, -1, 0, 0,
@@ -235,13 +270,22 @@ public class Flag implements Serializable {
                     0, 0, 1, 0,
                     0, 0, 0, 1/size));
             // @formatter:on
-        } else {
+            } else {
             // @formatter:off
             itemDisplay.setTransformationMatrix(new Matrix4f(
                     0, 1, 0, 0,
                     1, 0, 0, 0,
                     0, 0, 1, 0,
                     0, 0, 0, -1/size));
+            // @formatter:on
+            }
+        } else {
+            // @formatter:off
+            itemDisplay.setTransformationMatrix(new Matrix4f(
+                    1, 0, 0, 0,
+                    0, 1, 0, 0,
+                    0, 0, 1, 0,
+                    0, 0, 0, 1/size));
             // @formatter:on
         }
 
