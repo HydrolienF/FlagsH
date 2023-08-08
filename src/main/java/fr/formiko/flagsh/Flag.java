@@ -84,8 +84,6 @@ public class Flag implements Serializable {
     public void create(ItemStack itemStack) {
         float offsetToHitTheWall = offsetToFitTheWall - ((isFlag() ? 0.335f : 0.05f) * (size - 1f));
         boolean offsetToHitTheWallInX = false;
-        float offsetX = 0;
-        float offsetZ = 0;
         if (yaw == 0) {
             offsetToHitTheWallInX = true;
         } else if (yaw == 180) {
@@ -97,17 +95,18 @@ public class Flag implements Serializable {
 
 
         if (isFlag()) {
-            addItemDisplayForFlag(itemStack, offsetX, offsetZ, offsetToHitTheWall, offsetToHitTheWallInX);
-            addInteractionForFlag(offsetToHitTheWall, offsetToHitTheWallInX);
+            addItemDisplayForFlag(itemStack, offsetToHitTheWall, offsetToHitTheWallInX);
+            addInteractionForFlag();
         } else {
-            addItemDisplayForBanner(itemStack, offsetX, offsetZ, offsetToHitTheWall, offsetToHitTheWallInX);
-            addInteractionForFlag(offsetToHitTheWall, offsetToHitTheWallInX);
+            addItemDisplayForBanner(itemStack, offsetToHitTheWall, offsetToHitTheWallInX);
+            addInteractionForBanner();
         }
 
     }
 
-    private void addItemDisplayForFlag(ItemStack itemStack, float offsetX, float offsetZ, float offsetToHitTheWall,
-            boolean offsetToHitTheWallInX) {
+    private void addItemDisplayForFlag(ItemStack itemStack, float offsetToHitTheWall, boolean offsetToHitTheWallInX) {
+        float offsetX = 0;
+        float offsetZ = 0;
         float offsetToMergeTextureTogether = 0.01f * size;
         // Add offset to 1st banner
         if (offsetToHitTheWallInX) {
@@ -134,8 +133,9 @@ public class Flag implements Serializable {
         itemDisplaysIds.add(id2.getUniqueId());
     }
 
-    private void addItemDisplayForBanner(ItemStack itemStack, float offsetX, float offsetZ, float offsetToHitTheWall,
-            boolean offsetToHitTheWallInX) {
+    private void addItemDisplayForBanner(ItemStack itemStack, float offsetToHitTheWall, boolean offsetToHitTheWallInX) {
+        float offsetX = 0;
+        float offsetZ = 0;
         // Add offset to 1st banner
         if (offsetToHitTheWallInX) {
             offsetX += offsetToHitTheWall;
@@ -148,20 +148,12 @@ public class Flag implements Serializable {
         itemDisplaysIds.add(id1.getUniqueId());
     }
 
-    private void addInteractionForFlag(float offsetToHitTheWall, boolean offsetToHitTheWallInX) {
-        float offsetX = 0;
-        float offsetZ = 0;
-        // Add offset to 1st banner
-        if (offsetToHitTheWallInX) {
-            offsetX += offsetToHitTheWall;
-        } else {
-            offsetZ += offsetToHitTheWall;
-        }
+    private void addInteractionForFlag() {
         for (int i = 0; i < 10; i++) {
             float hitboxSize = 0.2f * size;
-            Location interactionLoc = new Location(getWorld(), getX() + 0.5f + offsetX, getY() + 0.5f - size / 2, getZ() + 0.5f + offsetZ);
+            Location interactionLoc = new Location(getWorld(), getX() + 0.5f, getY() + 0.5f - size / 2, getZ() + 0.5f);
 
-            float offsetOfHitbox = hitboxSize * (i - 2);
+            float offsetOfHitbox = hitboxSize * i - 0.5f;
             if (yaw == 0) {
                 interactionLoc.setX(interactionLoc.getX() - offsetOfHitbox);
             } else if (yaw == 180) {
@@ -175,6 +167,7 @@ public class Flag implements Serializable {
             interactionsIds.add(interaction.getUniqueId());
         }
     }
+    private void addInteractionForBanner() { addInteractionForFlag(); }
 
     /**
      * Extends the flag.
