@@ -1,9 +1,7 @@
 # FlagsH
 Minecraft plugins to display banners as flags.
 
-- **Place** a flag by placing a banner while sneaking.
-- **Extend** a flag by placing a banner while sneaking on the same block.
-- **Remove** a flag by placing an other block into the flag.
+[![Click to view video](https://img.youtube.com/vi/94QfPndYXYM/maxresdefault.jpg)](https://youtu.be/94QfPndYXYM)
 
 
 ## Install
