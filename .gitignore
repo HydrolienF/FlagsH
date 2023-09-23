@@ -31,3 +31,5 @@ build
 
 # IDE
 .vscode/
+
+bin/

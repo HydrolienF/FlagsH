@@ -3,7 +3,7 @@ plugins {
 }
 
 group 'fr.formiko.flagsh'
-version '3.0.1'
+version '3.0.2'
 
 repositories {
     mavenCentral()
@@ -18,6 +18,28 @@ dependencies {
     // testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
     compileOnly 'io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT'
 }
+
+def targetJavaVersion = 17
+java {
+    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = targetJavaVersion
+    options.encoding = "UTF-8"
+}
+
+processResources {
+    def props = [version: version]
+    inputs.properties props
+    filteringCharset 'UTF-8'
+    filesMatching('plugin.yml') {
+        expand props
+    }
+}
+
 
 // test {
 //     useJUnitPlatform()
