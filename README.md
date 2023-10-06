@@ -10,5 +10,5 @@ Place it in `plugins/` in your server files.
 After 1st launch you can edit config in `plugins/FlagH/config.yml`
 
 ## Test
-To test plugin you need Java 17+ to compile & package: `./gradlew jar`
+To test plugin you need Java 17+ to compile & package: `./gradlew shadowJar`
 Then you need an 1.20 Minecraft server with PaperMc to run it.

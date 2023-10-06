@@ -1,8 +1,8 @@
-name: FlagsH
-version: ${version}
-main: fr.formiko.flagsh.FlagsHPlugin
-description: Display banners as flags
+name: $name
+version: $version
+main: $group.${name}Plugin
+description: $description
 author: Hydrolien
 website: https://github.com/HydrolienF/FlagsH
-api-version: '1.20'
+api-version: "$apiVersion"
 folia-supported: true

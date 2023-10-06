@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
@@ -21,6 +22,8 @@ public class FlagsHPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         FlagsH.plugin = this;
+
+        new Metrics(this, 19981);
 
         getConfig().addDefault("maxFlagSize", 5f);
         getConfig().addDefault("increasingSizeStep", 0.5f);
