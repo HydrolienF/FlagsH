@@ -27,7 +27,7 @@ java {
 
 tasks {
     shadowJar {
-        relocate("org.bstats","fr.formiko.flagsh.bstats")
+        relocate("org.bstats","${project.group}.bstats")
         archiveFileName.set("${project.name}-${project.version}.jar")
     }
     compileJava {
