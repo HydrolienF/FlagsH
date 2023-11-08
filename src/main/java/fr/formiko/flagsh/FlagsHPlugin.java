@@ -13,6 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.jetbrains.annotations.NotNull;
+import co.aikar.commands.PaperCommandManager;
 
 public class FlagsHPlugin extends JavaPlugin {
     private List<Flag> flags;
@@ -47,6 +48,16 @@ public class FlagsHPlugin extends JavaPlugin {
 
 
         getServer().getPluginManager().registerEvents(new FlagsHListener(), this);
+        PaperCommandManager manager = new PaperCommandManager(this);
+        manager.registerCommand(new FlagsHCommand());
+        manager.getCommandCompletions().registerAsyncCompletion("flagshId", c -> {
+            List<String> l = new ArrayList<>();
+            l.add("all");
+            for (int i = 0; i < flags.size(); i++) {
+                l.add(String.valueOf(i + 1));
+            }
+            return l;
+        });
     }
 
     @Override
@@ -72,6 +83,12 @@ public class FlagsHPlugin extends JavaPlugin {
             getLogger().warning("Error while loading flags.");
             e.printStackTrace();
             return false;
+        }
+    }
+
+    public void reloadFlagDataFile() {
+        if (saveFlags()) {
+            loadFlags();
         }
     }
 }

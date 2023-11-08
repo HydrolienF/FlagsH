@@ -4,14 +4,33 @@ Minecraft plugins to display banners as flags.
 [![Click to view video](https://img.youtube.com/vi/94QfPndYXYM/maxresdefault.jpg)](https://youtu.be/94QfPndYXYM)
 
 
+## Use
+
+this plugin tries to be as intuitive as possible. No command is needed to create, extend and remove a flag.
+
+ - Place a banner item on a block to get a banner.
+ - Place a banner item on a block while sneaking to get a flag.
+ - Extends flag or banner by placing new banner item onto the flag or banner.
+ - Break flag or banner by hitting it.
+
+
+## Admin commands
+
+ - `/flagsh` or `fh` Print the version.
+ - `/fh reload` Reload config & flags data file.
+ - `/fh list` Print the list of all flags.
+ - `/fh remove <id>|all` Remove a flag on the list based on its possition or all flags.
+
+
 ## Install
 Download last version.
 Place it in `plugins/` in your server files.
 After 1st launch you can edit config in `plugins/FlagH/config.yml`
 
+
 ## Test
 To test plugin you need Java 17+ to compile & package: `./gradlew shadowJar`
-Then you need an 1.20 Minecraft server with PaperMc to run it.
+Then you need an 1.20 Minecraft server with PaperMc or fork to run it. (It work on Folia)
 
 
 ## Statistics

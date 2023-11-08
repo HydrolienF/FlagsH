@@ -8,7 +8,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class FlagsHListener implements Listener {
 
@@ -18,7 +17,7 @@ public class FlagsHListener implements Listener {
      * 
      * @param event BlockPlaceEvent triggered when a player places a block
      */
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlace(@NotNull BlockPlaceEvent event) {
         if (FlagsH.ALL_WALL_BANNERS.contains(event.getBlock().getType())) {
             Flag flag = FlagsH.getFlagAt(event.getBlock().getLocation());
@@ -41,7 +40,7 @@ public class FlagsHListener implements Listener {
      * 
      * @param event
      */
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onInteractWithFlagEntity(@NotNull PlayerInteractEntityEvent event) {
         ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
         // if player click with a banner on hand on a flag : extend the flag
@@ -58,8 +57,8 @@ public class FlagsHListener implements Listener {
      * 
      * @param event
      */
-    @EventHandler
-    public void onHitFlagEntity(@Nullable EntityDamageByEntityEvent event) {
+    @EventHandler(ignoreCancelled = true)
+    public void onHitFlagEntity(@NotNull EntityDamageByEntityEvent event) {
         Flag flag = FlagsH.getFlagLinkedToEntity(event.getEntity());
         if (flag != null) {
             event.setCancelled(true);

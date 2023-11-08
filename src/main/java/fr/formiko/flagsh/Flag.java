@@ -320,4 +320,7 @@ public class Flag implements Serializable {
         itemDisplay.setRotation(yaw, 0);
         return itemDisplay;
     }
+
+    @Override
+    public @NotNull String toString() { return (flagNotBanner ? "Flag" : "Banner") + " (" + x + ", " + y + ", " + z + ") size: " + size; }
 }

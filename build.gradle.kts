@@ -6,18 +6,20 @@ plugins {
 }
 
 group="fr.formiko.flagsh"
-version="3.0.3"
+version="3.1.0"
 description="Display banners as flags."
 
 repositories {
     mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://jitpack.io")
+    maven("https://repo.aikar.co/content/groups/aikar/")
 }
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.20.2-R0.1-SNAPSHOT")
     implementation("org.bstats:bstats-bukkit:3.0.2")
+    implementation("co.aikar:acf-paper:0.5.1-SNAPSHOT")
 }
 
 java {
@@ -28,6 +30,7 @@ java {
 tasks {
     shadowJar {
         relocate("org.bstats","${project.group}.bstats")
+        relocate("co.aikar.commands","${project.group}.acf")
         archiveFileName.set("${project.name}-${project.version}.jar")
     }
     compileJava {

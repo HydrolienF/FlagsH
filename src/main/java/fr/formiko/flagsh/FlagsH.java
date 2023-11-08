@@ -85,7 +85,7 @@ public class FlagsH {
      * @param behind       the block behind the banner
      * @param bannerPlaced true if the banner have been placed on the block banner, false if it's in the player hand.
      */
-    public static void extendsFlag(@NotNull Flag flag, @NotNull Block bannerPlaced, @Nullable Player playerToRemoveItemFrom) {
+    public static void extendsFlag(@NotNull Flag flag, @Nullable Block bannerPlaced, @Nullable Player playerToRemoveItemFrom) {
         if (flag.getSize() >= plugin.getConfig().getDouble("maxFlagSize")) {
             if (bannerPlaced != null) {
                 bannerPlaced.breakNaturally();
