@@ -12,6 +12,8 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Interaction;
 import org.bukkit.entity.ItemDisplay;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 
 public class Flag implements Serializable {
@@ -25,7 +27,6 @@ public class Flag implements Serializable {
     private final UUID worldId;
     private float size;
     private final boolean flagNotBanner; // false = banner, true = flag
-    // private final ItemStack itemStack;
 
     /**
      * Create a flag or banner.
@@ -40,7 +41,7 @@ public class Flag implements Serializable {
      * @param yaw                yaw of the flag
      * @param offsetToFitTheWall offset to place flag against the wall
      */
-    public Flag(int x, int y, int z, UUID worldId, boolean flagNotBanner, int yaw, float offsetToFitTheWall) {
+    public Flag(int x, int y, int z, @NotNull UUID worldId, boolean flagNotBanner, int yaw, float offsetToFitTheWall) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -52,24 +53,24 @@ public class Flag implements Serializable {
         itemDisplaysIds = new ArrayList<>();
         interactionsIds = new ArrayList<>();
     }
-    public Flag(Block block, boolean flagNotBanner, Block behind) {
+    public Flag(@NotNull Block block, boolean flagNotBanner, @NotNull Block behind) {
         this(block.getX(), block.getY(), block.getZ(), block.getWorld().getUID(), flagNotBanner,
                 getYawFromBehindAndBannerBlocks(block, behind), FlagsH.getOffsetToHitWall(behind.getType()) + (flagNotBanner ? 0f : 0.3f));
     }
 
-    public List<UUID> getItemDisplaysIds() { return itemDisplaysIds; }
-    public List<UUID> getInteractionsIds() { return interactionsIds; }
+    public @NotNull List<UUID> getItemDisplaysIds() { return itemDisplaysIds; }
+    public @NotNull List<UUID> getInteractionsIds() { return interactionsIds; }
     public final int getX() { return x; }
     public final int getY() { return y; }
     public final int getZ() { return z; }
     public final int getYaw() { return yaw; }
     public final Location getLocation() { return new Location(getWorld(), getX(), getY(), getZ()); }
-    public final UUID getWorldId() { return worldId; }
-    public final World getWorld() { return FlagsH.plugin.getServer().getWorld(worldId); }
+    public final @NotNull UUID getWorldId() { return worldId; }
+    public final World getWorld() { return FlagsH.getPlugin().getServer().getWorld(worldId); }
     public float getSize() { return size; }
     public final boolean isFlag() { return flagNotBanner; }
     public final boolean isBanner() { return !flagNotBanner; }
-    public ItemStack getItemStack() {
+    public @Nullable ItemStack getItemStack() {
         return !itemDisplaysIds.isEmpty() && getWorld().getEntity(itemDisplaysIds.get(0)) instanceof ItemDisplay itemDisplay
                 ? itemDisplay.getItemStack()
                 : null;
@@ -81,7 +82,7 @@ public class Flag implements Serializable {
      * 
      * @param itemStack item witch texture will be used
      */
-    public void create(ItemStack itemStack) {
+    public void create(@NotNull ItemStack itemStack) {
         float offsetToHitTheWall = offsetToFitTheWall - ((isFlag() ? 0.335f : 0.05f) * (size - 1f));
         boolean offsetToHitTheWallInX = false;
         if (yaw == 0) {
@@ -89,7 +90,7 @@ public class Flag implements Serializable {
         } else if (yaw == 180) {
             offsetToHitTheWallInX = true;
             offsetToHitTheWall = -offsetToHitTheWall;
-        } else if (yaw == 90) {} else if (yaw == -90) {
+        } else if (yaw == -90) {
             offsetToHitTheWall = -offsetToHitTheWall;
         }
 
@@ -104,7 +105,7 @@ public class Flag implements Serializable {
 
     }
 
-    private void addItemDisplayForFlag(ItemStack itemStack, float offsetToHitTheWall, boolean offsetToHitTheWallInX) {
+    private void addItemDisplayForFlag(@NotNull ItemStack itemStack, float offsetToHitTheWall, boolean offsetToHitTheWallInX) {
         float offsetX = 0;
         float offsetZ = 0;
         float offsetToMergeTextureTogether = 0.01f * size;
@@ -148,6 +149,10 @@ public class Flag implements Serializable {
         itemDisplaysIds.add(id1.getUniqueId());
     }
 
+    /**
+     * Add hitboxs to the flag.
+     * Hitboxs will be used to extend or destory the flag.
+     */
     private void addInteractionForFlag() {
         for (int i = 0; i < 11; i++) {
             float hitboxSize = 0.2f * size;
@@ -167,9 +172,11 @@ public class Flag implements Serializable {
             interactionsIds.add(interaction.getUniqueId());
         }
     }
+    /**
+     * Add hitboxs to the banner.
+     * Hitboxs will be used to extend or destory the banner.
+     */
     private void addInteractionForBanner() {
-        // TODO complete hitbox matching texture
-
         for (int i = 0; i < 5; i++) {
             float hitboxSize = 0.2f * size;
             Location interactionLoc = new Location(getWorld(), getX() + hitboxSize / 2, getY() + 0.8f - (size * 1.8f),
@@ -213,10 +220,10 @@ public class Flag implements Serializable {
      */
     public void remove() {
         ItemStack item = getItemStack().clone();
-        item.setAmount((int) (1 + (getSize() - 1) / FlagsH.plugin.getConfig().getDouble("increasingSizeStep")));
+        item.setAmount((int) (1 + (getSize() - 1) / FlagsH.getPlugin().getConfig().getDouble("increasingSizeStep")));
         getWorld().dropItem(getLocation(), item);
         removeEntities();
-        FlagsH.plugin.getFlags().remove(this);
+        FlagsH.getPlugin().getFlags().remove(this);
         playSound(Sound.BLOCK_WOOD_BREAK);
     }
 
@@ -228,7 +235,7 @@ public class Flag implements Serializable {
      * @param behind block behind the banner
      * @return
      */
-    private static int getYawFromBehindAndBannerBlocks(Block banner, Block behind) {
+    private static int getYawFromBehindAndBannerBlocks(@NotNull Block banner, @NotNull Block behind) {
         if (behind.getX() > banner.getX()) {
             return 0;
         } else if (behind.getX() < banner.getX()) {
@@ -238,7 +245,7 @@ public class Flag implements Serializable {
         } else if (behind.getZ() < banner.getZ()) {
             return -90;
         } else {
-            FlagsH.plugin.getLogger()
+            FlagsH.getPlugin().getLogger()
                     .warning("Flag.getYawFromBehindAndBannerBlocks() : behind and banner blocks are at the same location.");
             return 0;
         }
@@ -249,10 +256,10 @@ public class Flag implements Serializable {
      */
     private void removeEntities() {
         for (UUID id : itemDisplaysIds) {
-            FlagsH.plugin.getServer().getEntity(id).remove();
+            FlagsH.getPlugin().getServer().getEntity(id).remove();
         }
         for (UUID id : interactionsIds) {
-            FlagsH.plugin.getServer().getEntity(id).remove();
+            FlagsH.getPlugin().getServer().getEntity(id).remove();
         }
         itemDisplaysIds.clear();
         interactionsIds.clear();
@@ -263,10 +270,12 @@ public class Flag implements Serializable {
      * 
      * @param sound sound to play
      */
-    public void playSound(Sound sound) { getWorld().playSound(new Location(getWorld(), x, y, z), sound, SoundCategory.BLOCKS, 1, 0); }
+    public void playSound(@NotNull Sound sound) {
+        getWorld().playSound(new Location(getWorld(), x, y, z), sound, SoundCategory.BLOCKS, 1, 0);
+    }
 
     /** Create an interaction at the given location. */
-    private static Interaction createInteraction(Location location, float width, float height) {
+    private static Interaction createInteraction(@NotNull Location location, float width, float height) {
         Interaction interaction = location.getWorld().spawn(location, Interaction.class);
         interaction.setInteractionWidth(width);
         interaction.setInteractionHeight(height);
@@ -275,7 +284,8 @@ public class Flag implements Serializable {
         return interaction;
     }
     /** Create item display, rotate it and place it where the banner is. */
-    private ItemDisplay createBannerDisplay(ItemStack itemStack, Location location, float yaw, boolean isFirst, float size) {
+    private @NotNull ItemDisplay createBannerDisplay(@NotNull ItemStack itemStack, @NotNull Location location, float yaw, boolean isFirst,
+            float size) {
         // BlockDisplay don't work with banners
         ItemDisplay itemDisplay = getWorld().spawn(location, ItemDisplay.class);
         itemDisplay.setItemStack(itemStack);

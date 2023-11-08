@@ -11,9 +11,11 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class FlagsH {
-    public static FlagsHPlugin plugin;
+    private static FlagsHPlugin plugin;
     public static final List<Material> ALL_BANNERS = List.of(Material.WHITE_BANNER, Material.ORANGE_BANNER, Material.MAGENTA_BANNER,
             Material.LIGHT_BLUE_BANNER, Material.YELLOW_BANNER, Material.LIME_BANNER, Material.PINK_BANNER, Material.GRAY_BANNER,
             Material.LIGHT_GRAY_BANNER, Material.CYAN_BANNER, Material.PURPLE_BANNER, Material.BLUE_BANNER, Material.BROWN_BANNER,
@@ -44,15 +46,25 @@ public class FlagsH {
 
 
     // create ---------------------------------------------------------------------------------------------------------
-    public static void createFlag(Player p, Block banner, Block behind, ItemStack itemStack, float size) {
-        Flag f = new Flag(banner, p.isSneaking(), behind);
+
+    public static void setPlugin(@NotNull FlagsHPlugin plugin) { FlagsH.plugin = plugin; }
+    public static @NotNull FlagsHPlugin getPlugin() { return plugin; }
+    /**
+     * Create a flag.
+     * 
+     * @param p         Player that create the flag. If there is no player, the flag is created as if the player were sneaking.
+     * @param banner    Block where to place the banner.
+     * @param behind    Block behind the banner.
+     * @param itemStack ItemStack of the banner.
+     */
+    public static void createFlag(@Nullable Player p, @NotNull Block banner, @NotNull Block behind, @NotNull ItemStack itemStack) {
+        Flag f = new Flag(banner, p == null || p.isSneaking(), behind);
         f.create(itemStack);
         plugin.getFlags().add(f);
-
     }
 
     /** Return the offset to hit the wall depending on the block behind. */
-    public static float getOffsetToHitWall(Material behind) {
+    public static float getOffsetToHitWall(@Nullable Material behind) {
         if (FlagsH.ALL_WALLS.contains(behind))
             return 0.42f;
         else if (FlagsH.ALL_FENCES.contains(behind))
@@ -73,7 +85,7 @@ public class FlagsH {
      * @param behind       the block behind the banner
      * @param bannerPlaced true if the banner have been placed on the block banner, false if it's in the player hand.
      */
-    public static void extendsFlag(Flag flag, Block bannerPlaced, Player playerToRemoveItemFrom) {
+    public static void extendsFlag(@NotNull Flag flag, @NotNull Block bannerPlaced, @Nullable Player playerToRemoveItemFrom) {
         if (flag.getSize() >= plugin.getConfig().getDouble("maxFlagSize")) {
             if (bannerPlaced != null) {
                 bannerPlaced.breakNaturally();
@@ -92,7 +104,8 @@ public class FlagsH {
 
     // Usefull methods ------------------------------------------------------------------------------------------------
 
-    public static Flag getFlagAt(int x, int y, int z, World world) {
+    /** Get a flag from it's coordinates. */
+    public static @Nullable Flag getFlagAt(int x, int y, int z, @NotNull World world) {
         for (Flag flag : plugin.getFlags()) {
             if (flag.getX() == x && flag.getY() == y && flag.getZ() == z && flag.getWorldId().equals(world.getUID())) {
                 return flag;
@@ -100,17 +113,23 @@ public class FlagsH {
         }
         return null;
     }
-    public static Flag getFlagAt(Location loc) { return getFlagAt(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), loc.getWorld()); }
+    /** Get a flag from it's coordinates. */
+    public static @Nullable Flag getFlagAt(@NotNull Location loc) {
+        return getFlagAt(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), loc.getWorld());
+    }
 
-
-    public static Flag getFlagLinkedToEntity(UUID uuid) {
+    /** Get a flag from it's interaction. */
+    public static @Nullable Flag getFlagLinkedToEntity(@NotNull UUID entityUuid) {
         for (Flag flag : plugin.getFlags()) {
-            if (flag.getInteractionsIds().contains(uuid)) {
+            if (flag.getInteractionsIds().contains(entityUuid)) {
                 return flag;
             }
         }
         return null;
     }
-    public static Flag getFlagLinkedToEntity(Entity entity) { return getFlagLinkedToEntity(entity.getUniqueId()); }
+    /** Get a flag from it's interaction. */
+    public static @Nullable Flag getFlagLinkedToEntity(@NotNull Entity entity) {
+        return getFlagLinkedToEntity(entity.getUniqueId());
+    }
 
 }

@@ -12,16 +12,17 @@ import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
+import org.jetbrains.annotations.NotNull;
 
 public class FlagsHPlugin extends JavaPlugin {
     private List<Flag> flags;
-    private static final String FLAGS_FILE_PATH = "plugins/FlagsH/flags.data";
 
-    public List<Flag> getFlags() { return flags; }
+    public @NotNull List<Flag> getFlags() { return flags; }
+    private @NotNull File getDataFile() { return new File(getDataFolder(), "flags.data"); }
 
     @Override
     public void onEnable() {
-        FlagsH.plugin = this;
+        FlagsH.setPlugin(this);
 
         new Metrics(this, 19981);
 
@@ -34,10 +35,12 @@ public class FlagsHPlugin extends JavaPlugin {
         getConfig().options().copyDefaults(true);
         saveConfig();
 
-        // create the file if it doesn't exist
-        if (new File(FLAGS_FILE_PATH).exists()) {
+
+        // Load flags from data file.
+        if (getDataFile().exists()) {
             loadFlags();
-        } else {
+        }
+        if (flags == null) { // Init list if data file was not found or fail to be read.
             flags = new ArrayList<>();
         }
         getLogger().info("FlagsH loaded " + flags.size() + " flags.");
@@ -50,21 +53,23 @@ public class FlagsHPlugin extends JavaPlugin {
     public void onDisable() { saveFlags(); }
 
 
-    public boolean saveFlags() {
-        try (BukkitObjectOutputStream out = new BukkitObjectOutputStream(new GZIPOutputStream(new FileOutputStream(FLAGS_FILE_PATH)))) {
+    private boolean saveFlags() {
+        try (BukkitObjectOutputStream out = new BukkitObjectOutputStream(new GZIPOutputStream(new FileOutputStream(getDataFile())))) {
             out.writeObject(flags);
             return true;
         } catch (IOException e) {
+            getLogger().warning("Error while saving flags.");
             e.printStackTrace();
             return false;
         }
     }
     @SuppressWarnings("unchecked")
-    public boolean loadFlags() {
-        try (BukkitObjectInputStream in = new BukkitObjectInputStream(new GZIPInputStream(new FileInputStream(FLAGS_FILE_PATH)))) {
+    private boolean loadFlags() {
+        try (BukkitObjectInputStream in = new BukkitObjectInputStream(new GZIPInputStream(new FileInputStream(getDataFile())))) {
             flags = (List) in.readObject();
             return true;
         } catch (ClassNotFoundException | IOException e) {
+            getLogger().warning("Error while loading flags.");
             e.printStackTrace();
             return false;
         }
