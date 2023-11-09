@@ -1,5 +1,6 @@
 package fr.formiko.flagsh;
 
+import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,7 +21,7 @@ public class FlagsHListener implements Listener {
      */
     @EventHandler(ignoreCancelled = true)
     public void onPlace(@NotNull BlockPlaceEvent event) {
-        if (event.getPlayer().getGameMode().equals(org.bukkit.GameMode.ADVENTURE)) {
+        if (isPlayerForbidenToInteract(event.getPlayer())) {
             event.setCancelled(true);
             return;
         }
@@ -47,7 +48,7 @@ public class FlagsHListener implements Listener {
      */
     @EventHandler(ignoreCancelled = true)
     public void onInteractWithFlagEntity(@NotNull PlayerInteractEntityEvent event) {
-        if (event.getPlayer().getGameMode().equals(org.bukkit.GameMode.ADVENTURE)) {
+        if (isPlayerForbidenToInteract(event.getPlayer())) {
             event.setCancelled(true);
             return;
         }
@@ -68,7 +69,7 @@ public class FlagsHListener implements Listener {
      */
     @EventHandler(ignoreCancelled = true)
     public void onHitFlagEntity(@NotNull EntityDamageByEntityEvent event) {
-        if (event.getDamager() instanceof Player p && p.getGameMode().equals(org.bukkit.GameMode.ADVENTURE)) {
+        if (event.getDamager() instanceof Player p && isPlayerForbidenToInteract(p)) {
             event.setCancelled(true);
             return;
         }
@@ -77,5 +78,9 @@ public class FlagsHListener implements Listener {
             event.setCancelled(true);
             flag.remove();
         }
+    }
+
+    private boolean isPlayerForbidenToInteract(Player player) {
+        return FlagsH.getPlugin().getConfig().getList("forbidenInteractGamemodes", List.of()).contains(player.getGameMode().toString());
     }
 }

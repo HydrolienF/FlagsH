@@ -31,6 +31,7 @@ public class FlagsHPlugin extends JavaPlugin {
         getConfig().addDefault("increasingSizeStep", 0.5f);
         getConfig().addDefault("flagEnable", true);
         getConfig().addDefault("bannerEnable", true);
+        getConfig().addDefault("forbidenInteractGamemodes", List.of("ADVENTURE"));
         // TODO add a boolean to allow or not the extention of the flag with wool instead of banner
         // TODO add a boolean to allow or not reduction of the size with a shear
         getConfig().options().copyDefaults(true);
