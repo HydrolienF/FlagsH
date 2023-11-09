@@ -1,6 +1,7 @@
 package fr.formiko.flagsh;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -19,6 +20,10 @@ public class FlagsHListener implements Listener {
      */
     @EventHandler(ignoreCancelled = true)
     public void onPlace(@NotNull BlockPlaceEvent event) {
+        if (event.getPlayer().getGameMode().equals(org.bukkit.GameMode.ADVENTURE)) {
+            event.setCancelled(true);
+            return;
+        }
         if (FlagsH.ALL_WALL_BANNERS.contains(event.getBlock().getType())) {
             Flag flag = FlagsH.getFlagAt(event.getBlock().getLocation());
             if (flag == null) {
@@ -42,6 +47,10 @@ public class FlagsHListener implements Listener {
      */
     @EventHandler(ignoreCancelled = true)
     public void onInteractWithFlagEntity(@NotNull PlayerInteractEntityEvent event) {
+        if (event.getPlayer().getGameMode().equals(org.bukkit.GameMode.ADVENTURE)) {
+            event.setCancelled(true);
+            return;
+        }
         ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
         // if player click with a banner on hand on a flag : extend the flag
         if (FlagsH.ALL_BANNERS.contains(item.getType())) {
@@ -59,6 +68,10 @@ public class FlagsHListener implements Listener {
      */
     @EventHandler(ignoreCancelled = true)
     public void onHitFlagEntity(@NotNull EntityDamageByEntityEvent event) {
+        if (event.getDamager() instanceof Player p && p.getGameMode().equals(org.bukkit.GameMode.ADVENTURE)) {
+            event.setCancelled(true);
+            return;
+        }
         Flag flag = FlagsH.getFlagLinkedToEntity(event.getEntity());
         if (flag != null) {
             event.setCancelled(true);
