@@ -22,7 +22,6 @@ public class FlagsHListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onPlace(@NotNull BlockPlaceEvent event) {
         if (isPlayerForbidenToInteract(event.getPlayer())) {
-            event.setCancelled(true);
             return;
         }
         if (FlagsH.ALL_WALL_BANNERS.contains(event.getBlock().getType())) {
@@ -37,7 +36,8 @@ public class FlagsHListener implements Listener {
             } else {
                 FlagsH.extendsFlag(flag, event.getBlockPlaced(), null);
             }
-            event.getBlockPlaced().setType(Material.AIR);
+            // event.getBlockPlaced().setType(Material.AIR);
+            event.setCancelled(true);
         }
     }
 
@@ -49,7 +49,6 @@ public class FlagsHListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onInteractWithFlagEntity(@NotNull PlayerInteractEntityEvent event) {
         if (isPlayerForbidenToInteract(event.getPlayer())) {
-            event.setCancelled(true);
             return;
         }
         ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
@@ -58,6 +57,7 @@ public class FlagsHListener implements Listener {
             Flag flag = FlagsH.getFlagLinkedToEntity(event.getRightClicked());
             if (flag != null) {
                 FlagsH.extendsFlag(flag, null, event.getPlayer());
+                event.setCancelled(true);
             }
         }
     }
@@ -70,13 +70,12 @@ public class FlagsHListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onHitFlagEntity(@NotNull EntityDamageByEntityEvent event) {
         if (event.getDamager() instanceof Player p && isPlayerForbidenToInteract(p)) {
-            event.setCancelled(true);
             return;
         }
         Flag flag = FlagsH.getFlagLinkedToEntity(event.getEntity());
         if (flag != null) {
-            event.setCancelled(true);
             flag.remove();
+            event.setCancelled(true);
         }
     }
 
