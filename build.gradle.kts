@@ -6,7 +6,7 @@ plugins {
 }
 
 group="fr.formiko.flagsh"
-version="3.2.1"
+version="4.0.0"
 description="Display banners as flags."
 
 repositories {
@@ -14,10 +14,12 @@ repositories {
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://jitpack.io")
     maven("https://repo.aikar.co/content/groups/aikar/")
+    maven("https://repo.glaremasters.me/repository/towny/")
 }
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.20.2-R0.1-SNAPSHOT")
+    compileOnly("com.palmergames.bukkit.towny:towny:0.100.0.0")
     implementation("org.bstats:bstats-bukkit:3.0.2")
     implementation("co.aikar:acf-paper:0.5.1-SNAPSHOT")
 }

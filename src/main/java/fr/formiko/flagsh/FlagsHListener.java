@@ -1,6 +1,9 @@
 package fr.formiko.flagsh;
 
+import java.lang.reflect.Method;
 import java.util.List;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,7 +24,7 @@ public class FlagsHListener implements Listener {
      */
     @EventHandler(ignoreCancelled = true)
     public void onPlace(@NotNull BlockPlaceEvent event) {
-        if (isPlayerForbidenToInteract(event.getPlayer())) {
+        if (isPlayerForbidenToInteract(event.getPlayer(), event.getBlockPlaced().getLocation())) {
             return;
         }
         if (FlagsH.ALL_WALL_BANNERS.contains(event.getBlock().getType())) {
@@ -48,7 +51,7 @@ public class FlagsHListener implements Listener {
      */
     @EventHandler(ignoreCancelled = true)
     public void onInteractWithFlagEntity(@NotNull PlayerInteractEntityEvent event) {
-        if (isPlayerForbidenToInteract(event.getPlayer())) {
+        if (isPlayerForbidenToInteract(event.getPlayer(), event.getRightClicked().getLocation())) {
             return;
         }
         ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
@@ -69,7 +72,7 @@ public class FlagsHListener implements Listener {
      */
     @EventHandler(ignoreCancelled = true)
     public void onHitFlagEntity(@NotNull EntityDamageByEntityEvent event) {
-        if (event.getDamager() instanceof Player p && isPlayerForbidenToInteract(p)) {
+        if (event.getDamager() instanceof Player p && isPlayerForbidenToInteract(p, event.getEntity().getLocation())) {
             return;
         }
         Flag flag = FlagsH.getFlagLinkedToEntity(event.getEntity());
@@ -79,7 +82,36 @@ public class FlagsHListener implements Listener {
         }
     }
 
-    private boolean isPlayerForbidenToInteract(Player player) {
+    private Method getCachePermission;
+    private Object[] effectiveParameters;
+    private boolean isPlayerForbidenToInteract(Player player, Location locationToInteract) {
+        try {
+            // boolean bBuild = PlayerCacheUtil.getCachePermission(player, locationToInteract, Material.RED_BANNER,
+            // TownyPermission.ActionType.BUILD);
+
+            if (getCachePermission == null) {
+                Bukkit.getLogger().info("TINIT -------------");
+                Class<?> playerCacheUtil = Class.forName("com.palmergames.bukkit.towny.utils.PlayerCacheUtil");
+                Class<?> actionType = Class.forName("com.palmergames.bukkit.towny.object.TownyPermission$ActionType");
+                Class<?>[] formalParameters = {Player.class, Location.class, Material.class, actionType};
+                Object build = actionType.getEnumConstants()[0];
+
+                effectiveParameters = new Object[] {player, locationToInteract, Material.RED_BANNER, build};
+                getCachePermission = playerCacheUtil.getMethod("getCachePermission", formalParameters);
+            } else {
+                Bukkit.getLogger().info("REUSE -------=========================-------");
+                effectiveParameters[0] = player;
+                effectiveParameters[1] = locationToInteract;
+            }
+            Object o = getCachePermission.invoke(null, effectiveParameters);
+            if (o instanceof Boolean canBuild && !canBuild) {
+                // Bukkit.getLogger().info("Player can't interact with flag because of Towny permission");
+                return true;
+            }
+        } catch (Exception e) {
+            // Towny not found
+            // Bukkit.getLogger().warning("Towny not found, skipping Towny permission check");
+        }
         return FlagsH.getPlugin().getConfig().getList("forbidenInteractGamemodes", List.of()).contains(player.getGameMode().toString());
     }
 }

@@ -40,6 +40,7 @@ public class FlagsHCommand extends BaseCommand {
             sb.append(k++);
             sb.append(": ");
             sb.append(flag.toString());
+            sb.append("\n");
         }
         player.sendMessage(Component.text(sb.toString()));
     }

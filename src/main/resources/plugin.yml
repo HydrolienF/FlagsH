@@ -6,6 +6,7 @@ author: Hydrolien
 website: https://github.com/HydrolienF/FlagsH
 api-version: "$apiVersion"
 folia-supported: true
+softdepend: [Towny]
 permissions:
   flagsh.admin:
     description: "Allows use of admin commands."
