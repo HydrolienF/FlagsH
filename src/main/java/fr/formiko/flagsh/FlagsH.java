@@ -61,6 +61,7 @@ public class FlagsH {
         Flag f = new Flag(banner, p == null || p.isSneaking(), behind);
         f.create(itemStack);
         plugin.getFlags().add(f);
+        removeBannerItemFromPlayer(p);
     }
 
     /** Return the offset to hit the wall depending on the block behind. */
@@ -94,15 +95,19 @@ public class FlagsH {
         } else {
             flag.extend((float) Math.min(flag.getSize() + plugin.getConfig().getDouble("increasingSizeStep"),
                     plugin.getConfig().getDouble("maxFlagSize")));
-            if (playerToRemoveItemFrom != null && playerToRemoveItemFrom.getGameMode() != GameMode.CREATIVE) {
-                playerToRemoveItemFrom.getInventory().getItemInMainHand()
-                        .setAmount(playerToRemoveItemFrom.getInventory().getItemInMainHand().getAmount() - 1);
-            }
+            removeBannerItemFromPlayer(playerToRemoveItemFrom);
         }
     }
 
 
     // Usefull methods ------------------------------------------------------------------------------------------------
+
+    private static void removeBannerItemFromPlayer(@Nullable Player playerToRemoveItemFrom){
+        if (playerToRemoveItemFrom != null && playerToRemoveItemFrom.getGameMode() != GameMode.CREATIVE) {
+            playerToRemoveItemFrom.getInventory().getItemInMainHand()
+                    .setAmount(playerToRemoveItemFrom.getInventory().getItemInMainHand().getAmount() - 1);
+        }
+    }
 
     /** Get a flag from it's coordinates. */
     public static @Nullable Flag getFlagAt(int x, int y, int z, @NotNull World world) {

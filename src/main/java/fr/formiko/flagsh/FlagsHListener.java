@@ -34,7 +34,7 @@ public class FlagsHListener implements Listener {
                 }
                 FlagsH.createFlag(event.getPlayer(), event.getBlockPlaced(), event.getBlockAgainst(), event.getItemInHand());
             } else {
-                FlagsH.extendsFlag(flag, event.getBlockPlaced(), null);
+                FlagsH.extendsFlag(flag, event.getBlockPlaced(), event.getPlayer());
             }
             // event.getBlockPlaced().setType(Material.AIR);
             event.setCancelled(true);

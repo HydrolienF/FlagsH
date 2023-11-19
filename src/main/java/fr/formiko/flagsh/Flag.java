@@ -17,6 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 
 public class Flag implements Serializable {
+    private static final long serialVersionUID = 1L;
     private final List<UUID> itemDisplaysIds;
     private final List<UUID> interactionsIds;
     private final int x;

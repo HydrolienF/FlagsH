@@ -6,7 +6,7 @@ plugins {
 }
 
 group="fr.formiko.flagsh"
-version="3.2.0"
+version="3.2.1"
 description="Display banners as flags."
 
 repositories {
@@ -32,6 +32,9 @@ tasks {
         relocate("org.bstats","${project.group}.bstats")
         relocate("co.aikar.commands","${project.group}.acf")
         archiveFileName.set("${project.name}-${project.version}.jar")
+    }
+    assemble {
+        dependsOn(shadowJar)
     }
     compileJava {
         options.encoding = Charsets.UTF_8.name() // We want UTF-8 for everything
