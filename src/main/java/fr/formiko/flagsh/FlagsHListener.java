@@ -2,7 +2,6 @@ package fr.formiko.flagsh;
 
 import java.lang.reflect.Method;
 import java.util.List;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -90,7 +89,6 @@ public class FlagsHListener implements Listener {
             // TownyPermission.ActionType.BUILD);
 
             if (getCachePermission == null) {
-                Bukkit.getLogger().info("TINIT -------------");
                 Class<?> playerCacheUtil = Class.forName("com.palmergames.bukkit.towny.utils.PlayerCacheUtil");
                 Class<?> actionType = Class.forName("com.palmergames.bukkit.towny.object.TownyPermission$ActionType");
                 Class<?>[] formalParameters = {Player.class, Location.class, Material.class, actionType};
@@ -99,7 +97,6 @@ public class FlagsHListener implements Listener {
                 effectiveParameters = new Object[] {player, locationToInteract, Material.RED_BANNER, build};
                 getCachePermission = playerCacheUtil.getMethod("getCachePermission", formalParameters);
             } else {
-                Bukkit.getLogger().info("REUSE -------=========================-------");
                 effectiveParameters[0] = player;
                 effectiveParameters[1] = locationToInteract;
             }
