@@ -35,7 +35,7 @@ public class FlagsHCommand extends BaseCommand {
     public static void onList(CommandSender player) {
         StringBuilder sb = new StringBuilder();
         sb.append("Flags list: ");
-        int k = 0;
+        int k = 1;
         for (Flag flag : FlagsH.getPlugin().getFlags()) {
             sb.append(k++);
             sb.append(": ");
