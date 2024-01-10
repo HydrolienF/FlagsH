@@ -46,6 +46,4 @@ Then you need an 1.20 Minecraft server with PaperMc or fork to run it.
 
 
 ## Statistics
-<img align="center" src="https://bstats.org/signatures/bukkit/FlagsH.svg" alt="stats"/> 
-
-More stats [here](https://bstats.org/plugin/bukkit/FlagsH/19981)
+[![bStats Graph Data](https://bstats.org/signatures/bukkit/flagsh.svg)](https://bstats.org/plugin/bukkit/FlagsH/19981)
