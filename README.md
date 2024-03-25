@@ -1,10 +1,14 @@
 [download]: https://img.shields.io/github/downloads/HydrolienF/FlagsH/total
 [downloadLink]: https://hangar.papermc.io/Hydrolien/FlagsH
+[discord-shield]: https://img.shields.io/discord/728592434577014825?label=discord
+[discord-invite]: https://discord.gg/RPNbtRSFqG
 
 # FlagsH
 Minecraft plugins to display banners as flags.
 
 [ ![download][] ][downloadLink]
+[ ![discord-shield][] ][discord-invite]
+
 
 [![Click to view video](https://img.youtube.com/vi/94QfPndYXYM/maxresdefault.jpg)](https://youtu.be/94QfPndYXYM)
 [See video here](https://youtu.be/94QfPndYXYM)
