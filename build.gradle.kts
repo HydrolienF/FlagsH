@@ -3,6 +3,7 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 plugins {
     id("java")
     id("com.github.johnrengelman.shadow") version "8.1.1"
+    `maven-publish` // Add ./gradlew publishToMavenLocal
 }
 
 group="fr.formiko.flagsh"
@@ -26,7 +27,7 @@ dependencies {
 
 java {
   // Configure the java toolchain. This allows gradle to auto-provision JDK 17 on systems that only have JDK 8 installed for example.
-  toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+//   toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }
 
 tasks {
@@ -58,5 +59,11 @@ tasks {
         filesMatching("plugin.yml") {
             expand(props)
         }
+    }
+}
+
+publishing {
+    publications.create<MavenPublication>("maven") {
+        from(components["java"])
     }
 }
