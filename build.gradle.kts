@@ -7,7 +7,7 @@ plugins {
 }
 
 group="fr.formiko.flagsh"
-version="4.0.2"
+version="4.0.1"
 description="Display banners as flags."
 
 repositories {
@@ -46,9 +46,14 @@ tasks {
         dependsOn(shadowJar)
     }
     compileJava {
-        options.release.set(21) // See https://openjdk.java.net/jeps/247 for more information.
+        options.encoding = Charsets.UTF_8.name() // We want UTF-8 for everything
+        options.release.set(17) // See https://openjdk.java.net/jeps/247 for more information.
+    }
+    javadoc {
+        options.encoding = Charsets.UTF_8.name() // We want UTF-8 for everything
     }
     processResources {
+        filteringCharset = Charsets.UTF_8.name() // We want UTF-8 for everything
         val props = mapOf(
             "name" to project.name,
             "version" to project.version,
