@@ -2,8 +2,8 @@ package fr.formiko.flagsh;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.Nonnull;
 import org.bukkit.command.CommandSender;
-import org.jetbrains.annotations.NotNull;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandCompletion;
@@ -49,7 +49,7 @@ public class FlagsHCommand extends BaseCommand {
     @CommandCompletion("@flagshId")
     @Description("Remove a flag or all flags")
     @CommandPermission(ADMIN_PERMISSION)
-    public static void onRemove(CommandSender commandSender, @NotNull String arg) {
+    public static void onRemove(CommandSender commandSender, @Nonnull String arg) {
         if (arg.equalsIgnoreCase("all")) {
             List<Flag> l = new ArrayList<>(FlagsH.getPlugin().getFlags());
             for (Flag flag : l) {

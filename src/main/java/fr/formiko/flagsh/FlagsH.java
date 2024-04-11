@@ -2,6 +2,8 @@ package fr.formiko.flagsh;
 
 import java.util.List;
 import java.util.UUID;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -11,8 +13,6 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class FlagsH {
     private static FlagsHPlugin plugin;
@@ -47,8 +47,8 @@ public class FlagsH {
 
     // create ---------------------------------------------------------------------------------------------------------
 
-    public static void setPlugin(@NotNull FlagsHPlugin plugin) { FlagsH.plugin = plugin; }
-    public static @NotNull FlagsHPlugin getPlugin() { return plugin; }
+    public static void setPlugin(@Nonnull FlagsHPlugin plugin) { FlagsH.plugin = plugin; }
+    public static @Nonnull FlagsHPlugin getPlugin() { return plugin; }
     /**
      * Create a flag.
      * 
@@ -57,7 +57,7 @@ public class FlagsH {
      * @param behind    Block behind the banner.
      * @param itemStack ItemStack of the banner.
      */
-    public static void createFlag(@Nullable Player p, @NotNull Block banner, @NotNull Block behind, @NotNull ItemStack itemStack) {
+    public static void createFlag(@Nullable Player p, @Nonnull Block banner, @Nonnull Block behind, @Nonnull ItemStack itemStack) {
         Flag f = new Flag(banner, p == null || p.isSneaking(), behind);
         f.create(itemStack);
         plugin.getFlags().add(f);
@@ -86,7 +86,7 @@ public class FlagsH {
      * @param behind       the block behind the banner
      * @param bannerPlaced true if the banner have been placed on the block banner, false if it's in the player hand.
      */
-    public static void extendsFlag(@NotNull Flag flag, @Nullable Block bannerPlaced, @Nullable Player playerToRemoveItemFrom) {
+    public static void extendsFlag(@Nonnull Flag flag, @Nullable Block bannerPlaced, @Nullable Player playerToRemoveItemFrom) {
         if (flag.getSize() >= plugin.getConfig().getDouble("maxFlagSize")) {
             if (bannerPlaced != null) {
                 bannerPlaced.breakNaturally();
@@ -102,7 +102,7 @@ public class FlagsH {
 
     // Usefull methods ------------------------------------------------------------------------------------------------
 
-    private static void removeBannerItemFromPlayer(@Nullable Player playerToRemoveItemFrom){
+    private static void removeBannerItemFromPlayer(@Nullable Player playerToRemoveItemFrom) {
         if (playerToRemoveItemFrom != null && playerToRemoveItemFrom.getGameMode() != GameMode.CREATIVE) {
             playerToRemoveItemFrom.getInventory().getItemInMainHand()
                     .setAmount(playerToRemoveItemFrom.getInventory().getItemInMainHand().getAmount() - 1);
@@ -110,7 +110,7 @@ public class FlagsH {
     }
 
     /** Get a flag from it's coordinates. */
-    public static @Nullable Flag getFlagAt(int x, int y, int z, @NotNull World world) {
+    public static @Nullable Flag getFlagAt(int x, int y, int z, @Nonnull World world) {
         for (Flag flag : plugin.getFlags()) {
             if (flag.getX() == x && flag.getY() == y && flag.getZ() == z && flag.getWorldId().equals(world.getUID())) {
                 return flag;
@@ -119,12 +119,12 @@ public class FlagsH {
         return null;
     }
     /** Get a flag from it's coordinates. */
-    public static @Nullable Flag getFlagAt(@NotNull Location loc) {
+    public static @Nullable Flag getFlagAt(@Nonnull Location loc) {
         return getFlagAt(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), loc.getWorld());
     }
 
     /** Get a flag from it's interaction. */
-    public static @Nullable Flag getFlagLinkedToEntity(@NotNull UUID entityUuid) {
+    public static @Nullable Flag getFlagLinkedToEntity(@Nonnull UUID entityUuid) {
         for (Flag flag : plugin.getFlags()) {
             if (flag.getInteractionsIds().contains(entityUuid)) {
                 return flag;
@@ -133,7 +133,7 @@ public class FlagsH {
         return null;
     }
     /** Get a flag from it's interaction. */
-    public static @Nullable Flag getFlagLinkedToEntity(@NotNull Entity entity) {
+    public static @Nullable Flag getFlagLinkedToEntity(@Nonnull Entity entity) {
         return getFlagLinkedToEntity(entity.getUniqueId());
     }
 

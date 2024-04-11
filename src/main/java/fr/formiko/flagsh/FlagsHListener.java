@@ -2,6 +2,7 @@ package fr.formiko.flagsh;
 
 import java.lang.reflect.Method;
 import java.util.List;
+import javax.annotation.Nonnull;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -11,7 +12,6 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 public class FlagsHListener implements Listener {
 
@@ -22,7 +22,7 @@ public class FlagsHListener implements Listener {
      * @param event BlockPlaceEvent triggered when a player places a block
      */
     @EventHandler(ignoreCancelled = true)
-    public void onPlace(@NotNull BlockPlaceEvent event) {
+    public void onPlace(@Nonnull BlockPlaceEvent event) {
         if (isPlayerForbidenToInteract(event.getPlayer(), event.getBlockPlaced().getLocation())) {
             return;
         }
@@ -49,7 +49,7 @@ public class FlagsHListener implements Listener {
      * @param event
      */
     @EventHandler(ignoreCancelled = true)
-    public void onInteractWithFlagEntity(@NotNull PlayerInteractEntityEvent event) {
+    public void onInteractWithFlagEntity(@Nonnull PlayerInteractEntityEvent event) {
         if (isPlayerForbidenToInteract(event.getPlayer(), event.getRightClicked().getLocation())) {
             return;
         }
@@ -70,7 +70,7 @@ public class FlagsHListener implements Listener {
      * @param event
      */
     @EventHandler(ignoreCancelled = true)
-    public void onHitFlagEntity(@NotNull EntityDamageByEntityEvent event) {
+    public void onHitFlagEntity(@Nonnull EntityDamageByEntityEvent event) {
         if (event.getDamager() instanceof Player p && isPlayerForbidenToInteract(p, event.getEntity().getLocation())) {
             return;
         }

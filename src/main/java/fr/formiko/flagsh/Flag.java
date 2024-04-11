@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
@@ -12,8 +14,6 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Interaction;
 import org.bukkit.entity.ItemDisplay;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 
 public class Flag implements Serializable {
@@ -42,7 +42,7 @@ public class Flag implements Serializable {
      * @param yaw                yaw of the flag
      * @param offsetToFitTheWall offset to place flag against the wall
      */
-    public Flag(int x, int y, int z, @NotNull UUID worldId, boolean flagNotBanner, int yaw, float offsetToFitTheWall) {
+    public Flag(int x, int y, int z, @Nonnull UUID worldId, boolean flagNotBanner, int yaw, float offsetToFitTheWall) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -54,19 +54,19 @@ public class Flag implements Serializable {
         itemDisplaysIds = new ArrayList<>();
         interactionsIds = new ArrayList<>();
     }
-    public Flag(@NotNull Block block, boolean flagNotBanner, @NotNull Block behind) {
+    public Flag(@Nonnull Block block, boolean flagNotBanner, @Nonnull Block behind) {
         this(block.getX(), block.getY(), block.getZ(), block.getWorld().getUID(), flagNotBanner,
                 getYawFromBehindAndBannerBlocks(block, behind), FlagsH.getOffsetToHitWall(behind.getType()) + (flagNotBanner ? 0f : 0.3f));
     }
 
-    public @NotNull List<UUID> getItemDisplaysIds() { return itemDisplaysIds; }
-    public @NotNull List<UUID> getInteractionsIds() { return interactionsIds; }
+    public @Nonnull List<UUID> getItemDisplaysIds() { return itemDisplaysIds; }
+    public @Nonnull List<UUID> getInteractionsIds() { return interactionsIds; }
     public final int getX() { return x; }
     public final int getY() { return y; }
     public final int getZ() { return z; }
     public final int getYaw() { return yaw; }
     public final Location getLocation() { return new Location(getWorld(), getX(), getY(), getZ()); }
-    public final @NotNull UUID getWorldId() { return worldId; }
+    public final @Nonnull UUID getWorldId() { return worldId; }
     public final World getWorld() { return FlagsH.getPlugin().getServer().getWorld(worldId); }
     public float getSize() { return size; }
     public final boolean isFlag() { return flagNotBanner; }
@@ -83,7 +83,7 @@ public class Flag implements Serializable {
      * 
      * @param itemStack item witch texture will be used
      */
-    public void create(@NotNull ItemStack itemStack) {
+    public void create(@Nonnull ItemStack itemStack) {
         float offsetToHitTheWall = offsetToFitTheWall - ((isFlag() ? 0.335f : 0.05f) * (size - 1f));
         boolean offsetToHitTheWallInX = false;
         if (yaw == 0) {
@@ -106,7 +106,7 @@ public class Flag implements Serializable {
 
     }
 
-    private void addItemDisplayForFlag(@NotNull ItemStack itemStack, float offsetToHitTheWall, boolean offsetToHitTheWallInX) {
+    private void addItemDisplayForFlag(@Nonnull ItemStack itemStack, float offsetToHitTheWall, boolean offsetToHitTheWallInX) {
         float offsetX = 0;
         float offsetZ = 0;
         float offsetToMergeTextureTogether = 0.01f * size;
@@ -236,7 +236,7 @@ public class Flag implements Serializable {
      * @param behind block behind the banner
      * @return
      */
-    private static int getYawFromBehindAndBannerBlocks(@NotNull Block banner, @NotNull Block behind) {
+    private static int getYawFromBehindAndBannerBlocks(@Nonnull Block banner, @Nonnull Block behind) {
         if (behind.getX() > banner.getX()) {
             return 0;
         } else if (behind.getX() < banner.getX()) {
@@ -271,12 +271,12 @@ public class Flag implements Serializable {
      * 
      * @param sound sound to play
      */
-    public void playSound(@NotNull Sound sound) {
+    public void playSound(@Nonnull Sound sound) {
         getWorld().playSound(new Location(getWorld(), x, y, z), sound, SoundCategory.BLOCKS, 1, 0);
     }
 
     /** Create an interaction at the given location. */
-    private static Interaction createInteraction(@NotNull Location location, float width, float height) {
+    private static Interaction createInteraction(@Nonnull Location location, float width, float height) {
         Interaction interaction = location.getWorld().spawn(location, Interaction.class);
         interaction.setInteractionWidth(width);
         interaction.setInteractionHeight(height);
@@ -285,7 +285,7 @@ public class Flag implements Serializable {
         return interaction;
     }
     /** Create item display, rotate it and place it where the banner is. */
-    private @NotNull ItemDisplay createBannerDisplay(@NotNull ItemStack itemStack, @NotNull Location location, float yaw, boolean isFirst,
+    private @Nonnull ItemDisplay createBannerDisplay(@Nonnull ItemStack itemStack, @Nonnull Location location, float yaw, boolean isFirst,
             float size) {
         // BlockDisplay don't work with banners
         ItemDisplay itemDisplay = getWorld().spawn(location, ItemDisplay.class);
@@ -323,5 +323,5 @@ public class Flag implements Serializable {
     }
 
     @Override
-    public @NotNull String toString() { return (flagNotBanner ? "Flag" : "Banner") + " (" + x + ", " + y + ", " + z + ") size: " + size; }
+    public @Nonnull String toString() { return (flagNotBanner ? "Flag" : "Banner") + " (" + x + ", " + y + ", " + z + ") size: " + size; }
 }
