@@ -2,7 +2,7 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
     id("java")
-    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("io.github.goooler.shadow") version "8.1.7"
     `maven-publish` // Add ./gradlew publishToMavenLocal
 }
 
@@ -47,7 +47,7 @@ tasks {
     }
     compileJava {
         options.encoding = Charsets.UTF_8.name() // We want UTF-8 for everything
-        options.release.set(17) // See https://openjdk.java.net/jeps/247 for more information.
+        options.release.set(21) // See https://openjdk.java.net/jeps/247 for more information.
     }
     javadoc {
         options.encoding = Charsets.UTF_8.name() // We want UTF-8 for everything
