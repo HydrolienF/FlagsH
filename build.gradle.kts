@@ -7,7 +7,7 @@ plugins {
 }
 
 group="fr.formiko.flagsh"
-version="4.0.1"
+version="4.0.2"
 description="Display banners as flags."
 
 repositories {
@@ -32,22 +32,23 @@ java {
 
 tasks {
     shadowJar {
-        relocate("org.bstats","${project.group}.bstats")
-        relocate("co.aikar.commands","${project.group}.acf")
+        val prefix = "${project.group}.lib"
+        sequenceOf(
+            "co.aikar",
+            "org.bstats",
+        ).forEach { pkg ->
+            relocate(pkg, "$prefix.$pkg")
+        }
+
         archiveFileName.set("${project.name}-${project.version}.jar")
     }
     assemble {
         dependsOn(shadowJar)
     }
     compileJava {
-        options.encoding = Charsets.UTF_8.name() // We want UTF-8 for everything
-        options.release.set(17) // See https://openjdk.java.net/jeps/247 for more information.
-    }
-    javadoc {
-        options.encoding = Charsets.UTF_8.name() // We want UTF-8 for everything
+        options.release.set(21) // See https://openjdk.java.net/jeps/247 for more information.
     }
     processResources {
-        filteringCharset = Charsets.UTF_8.name() // We want UTF-8 for everything
         val props = mapOf(
             "name" to project.name,
             "version" to project.version,
