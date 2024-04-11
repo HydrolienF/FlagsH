@@ -18,21 +18,21 @@ public class FlagsHCommand extends BaseCommand {
     private static final String ADMIN_PERMISSION = "flagsh.admin";
     @Default
     @Description("Lists the version of the plugin")
-    public static void onFh(CommandSender player) { player.sendMessage(Component.text(FlagsH.getPlugin().toString())); }
+    public static void onFh(CommandSender commandSender) { commandSender.sendMessage(Component.text(FlagsH.getPlugin().toString())); }
 
     @Subcommand("reload")
     @Description("Reloads the plugin config and data file")
     @CommandPermission(ADMIN_PERMISSION)
-    public static void onReload(CommandSender player) {
+    public static void onReload(CommandSender commandSender) {
         FlagsH.getPlugin().reloadConfig();
         FlagsH.getPlugin().reloadFlagDataFile();
-        player.sendMessage(Component.text("FlagsH reloaded"));
+        commandSender.sendMessage(Component.text("FlagsH reloaded"));
     }
 
     @Subcommand("list")
     @Description("Lists all flags")
     @CommandPermission(ADMIN_PERMISSION)
-    public static void onList(CommandSender player) {
+    public static void onList(CommandSender commandSender) {
         StringBuilder sb = new StringBuilder();
         sb.append("Flags list: ");
         int k = 1;
@@ -42,7 +42,7 @@ public class FlagsHCommand extends BaseCommand {
             sb.append(flag.toString());
             sb.append("\n");
         }
-        player.sendMessage(Component.text(sb.toString()));
+        commandSender.sendMessage(Component.text(sb.toString()));
     }
 
     @Subcommand("remove")
