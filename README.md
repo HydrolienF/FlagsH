@@ -3,12 +3,11 @@
 [discord-shield]: https://img.shields.io/discord/728592434577014825?label=discord
 [discord-invite]: https://discord.gg/RPNbtRSFqG
 
-# FlagsH
-Minecraft plugins to display banners as flags.
-
 [ ![download][] ][downloadLink]
 [ ![discord-shield][] ][discord-invite]
 
+# FlagsH
+Minecraft plugins to display banners as flags.
 
 [![Click to view video](https://img.youtube.com/vi/94QfPndYXYM/maxresdefault.jpg)](https://youtu.be/94QfPndYXYM)
 [See video here](https://youtu.be/94QfPndYXYM)
@@ -51,3 +50,7 @@ Then you need an 1.20 Minecraft server with PaperMc or fork to run it.
 
 ## Statistics
 [![bStats Graph Data](https://bstats.org/signatures/bukkit/flagsh.svg)](https://bstats.org/plugin/bukkit/FlagsH/19981)
+
+## Build
+
+Build with `./gradlew assemble`. Plugin file will be in `build/libs/`.
