@@ -3,10 +3,11 @@ version: $version
 main: $group.${name}Plugin
 description: $description
 author: Hydrolien
-website: https://github.com/HydrolienF/FlagsH
+website: https://github.com/HydrolienF$name
 api-version: "$apiVersion"
 folia-supported: true
 softdepend: [Towny]
+
 permissions:
   flagsh.admin:
     description: "Allows use of admin commands."

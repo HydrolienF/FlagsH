@@ -1,9 +1,8 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-
 plugins {
     id("java")
     id("io.github.goooler.shadow") version "8.1.7"
     `maven-publish` // Add ./gradlew publishToMavenLocal
+    id("xyz.jpenilla.run-paper") version "2.3.0"
 }
 
 group="fr.formiko.flagsh"
@@ -19,7 +18,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT") // TODO "io.papermc.paper:paper-api:1.20.6-R0.1-SNAPSHOT" when it will be stable
     compileOnly("com.palmergames.bukkit.towny:towny:0.100.2.0")
     implementation("org.bstats:bstats-bukkit:3.0.2")
     implementation("co.aikar:acf-paper:0.5.1-SNAPSHOT")
@@ -65,6 +64,12 @@ tasks {
         filesMatching("plugin.yml") {
             expand(props)
         }
+    }
+    runServer {
+        // Configure the Minecraft version for our task.
+        // This is the only required configuration besides applying the plugin.
+        // Your plugin's jar (or shadowJar if present) will be used automatically.
+        minecraftVersion("1.20.4")
     }
 }
 
