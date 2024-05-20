@@ -1,3 +1,7 @@
+# 4.0.2
+Explicit support for 1.20.5 & 1.20.6.
+Work with [1.20 - 1.20.6]
+
 # 4.0.1
 
 Explicit support for 1.20.3 & 1.20.4.
