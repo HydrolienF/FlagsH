@@ -27,13 +27,11 @@ public class FlagsHPlugin extends JavaPlugin {
 
         new Metrics(this, 19981);
 
-        getConfig().addDefault("maxFlagSize", 5f);
+        getConfig().addDefault("maxFlagSize", 10f);
         getConfig().addDefault("increasingSizeStep", 0.5f);
         getConfig().addDefault("flagEnable", true);
         getConfig().addDefault("bannerEnable", true);
         getConfig().addDefault("forbidenInteractGamemodes", List.of("ADVENTURE"));
-        // TODO add a boolean to allow or not the extention of the flag with wool instead of banner
-        // TODO add a boolean to allow or not reduction of the size with a shear
         getConfig().options().copyDefaults(true);
         saveConfig();
 
@@ -45,7 +43,7 @@ public class FlagsHPlugin extends JavaPlugin {
         if (flags == null) { // Init list if data file was not found or fail to be read.
             flags = new ArrayList<>();
         }
-        getLogger().info("FlagsH loaded " + flags.size() + " flags.");
+        getLogger().info(() -> "FlagsH loaded " + flags.size() + " flags."); // since Java 8, we can use Supplier, which will be evaluated lazily
 
 
         getServer().getPluginManager().registerEvents(new FlagsHListener(), this);
@@ -70,8 +68,7 @@ public class FlagsHPlugin extends JavaPlugin {
             out.writeObject(flags);
             return true;
         } catch (IOException e) {
-            getLogger().warning("Error while saving flags.");
-            e.printStackTrace();
+            getLogger().log(java.util.logging.Level.SEVERE, "Error while saving flags.", e);
             return false;
         }
     }
@@ -81,8 +78,7 @@ public class FlagsHPlugin extends JavaPlugin {
             flags = (List<Flag>) in.readObject();
             return true;
         } catch (ClassNotFoundException | IOException e) {
-            getLogger().warning("Error while loading flags.");
-            e.printStackTrace();
+            getLogger().log(java.util.logging.Level.SEVERE, "Error while loading flags.", e);
             return false;
         }
     }

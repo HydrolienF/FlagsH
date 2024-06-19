@@ -38,9 +38,22 @@ FlagsH is compatible with [Towny](https://github.com/TownyAdvanced/Towny) claim 
 
 
 ## Install
-Download last version.
-Place it in `plugins/` in your server files.
+
+1. Download last version.
+2. Place it in `plugins/` in your server files.
+3. Restart your server
+
+Supported Minecraft version are listed in each release.
+
+If you are using an older Minecraft version than 1.20.5, you will need to have Java 21 on your server.
+
+## Configure
+
 After 1st launch you can edit config in `plugins/FlagH/config.yml`
+`maxFlagSize` is the max size of a flag. Default size is 1. A size of 2 means that the flag is 2 times larger and 2 times longer. If a player try to increase flag size over the limit then flag won't be extended, banner item will drop to the ground and angry NPC sound will be played.
+Each new banner added extend the flag of `increasingSizeStep`.
+`flagEnable` & `bannerEnable` enable or disable flag or banner.
+`forbidenInteractGamemodes` is a list of gamemode in witch player can't interact with flags and banners. Usualy you only want player in adventure not being able to edit flag, but you might also want to prevent any player in survival to place or destroy banner.
 
 
 ## Statistics

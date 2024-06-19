@@ -38,7 +38,6 @@ public class FlagsHListener implements Listener {
             } else {
                 FlagsH.extendsFlag(flag, event.getBlockPlaced(), event.getPlayer());
             }
-            // event.getBlockPlaced().setType(Material.AIR);
             event.setCancelled(true);
         }
     }
@@ -83,31 +82,32 @@ public class FlagsHListener implements Listener {
 
     private Method getCachePermission;
     private Object[] effectiveParameters;
+    private boolean testTowny = true;
     private boolean isPlayerForbidenToInteract(Player player, Location locationToInteract) {
-        try {
-            // boolean bBuild = PlayerCacheUtil.getCachePermission(player, locationToInteract, Material.RED_BANNER,
-            // TownyPermission.ActionType.BUILD);
+        if(testTowny){
+            try {
+                if (getCachePermission == null) {
+                    Class<?> playerCacheUtil = Class.forName("com.palmergames.bukkit.towny.utils.PlayerCacheUtil");
+                    Class<?> actionType = Class.forName("com.palmergames.bukkit.towny.object.TownyPermission$ActionType");
+                    Class<?>[] formalParameters = {Player.class, Location.class, Material.class, actionType};
+                    Object build = actionType.getEnumConstants()[0];
 
-            if (getCachePermission == null) {
-                Class<?> playerCacheUtil = Class.forName("com.palmergames.bukkit.towny.utils.PlayerCacheUtil");
-                Class<?> actionType = Class.forName("com.palmergames.bukkit.towny.object.TownyPermission$ActionType");
-                Class<?>[] formalParameters = {Player.class, Location.class, Material.class, actionType};
-                Object build = actionType.getEnumConstants()[0];
-
-                effectiveParameters = new Object[] {player, locationToInteract, Material.RED_BANNER, build};
-                getCachePermission = playerCacheUtil.getMethod("getCachePermission", formalParameters);
-            } else {
-                effectiveParameters[0] = player;
-                effectiveParameters[1] = locationToInteract;
+                    effectiveParameters = new Object[] {player, locationToInteract, Material.RED_BANNER, build};
+                    getCachePermission = playerCacheUtil.getMethod("getCachePermission", formalParameters);
+                } else {
+                    effectiveParameters[0] = player;
+                    effectiveParameters[1] = locationToInteract;
+                }
+                Object o = getCachePermission.invoke(null, effectiveParameters);
+                if (o instanceof Boolean canBuild && !canBuild) {
+                    // Player can't interact with flag because of Towny permission
+                    return true;
+                }
+            } catch (Exception e) {
+                // Towny not found
+                FlagsH.getPlugin().getLogger().info("Towny not found, skipping Towny permission check for flag interaction");
+                testTowny = false;
             }
-            Object o = getCachePermission.invoke(null, effectiveParameters);
-            if (o instanceof Boolean canBuild && !canBuild) {
-                // Bukkit.getLogger().info("Player can't interact with flag because of Towny permission");
-                return true;
-            }
-        } catch (Exception e) {
-            // Towny not found
-            // Bukkit.getLogger().warning("Towny not found, skipping Towny permission check");
         }
         return FlagsH.getPlugin().getConfig().getList("forbidenInteractGamemodes", List.of()).contains(player.getGameMode().toString());
     }
