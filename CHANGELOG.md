@@ -1,6 +1,7 @@
 # 4.1.0
 Banner placed from off hand can no longer remove an other item (#10).
 Banner placed with off hand can have alternate mods. Alternates modes allow to place vanilla banner or, banner in switchable block instead of flags (#7).
+Make flags removable after a map change or a /kill command.
 
 # 4.0.3
 Explicit support for 1.21

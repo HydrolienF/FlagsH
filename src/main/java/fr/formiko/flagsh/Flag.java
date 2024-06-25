@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.bukkit.Location;
@@ -67,14 +68,13 @@ public class Flag implements Serializable {
     public final int getYaw() { return yaw; }
     public final Location getLocation() { return new Location(getWorld(), getX(), getY(), getZ()); }
     public final @Nonnull UUID getWorldId() { return worldId; }
-    public final World getWorld() { return FlagsH.getPlugin().getServer().getWorld(worldId); }
+    public final @Nullable World getWorld() { return FlagsH.getPlugin().getServer().getWorld(worldId); }
     public float getSize() { return size; }
     public final boolean isFlag() { return flagNotBanner; }
     public final boolean isBanner() { return !flagNotBanner; }
     public @Nullable ItemStack getItemStack() {
-        return !itemDisplaysIds.isEmpty() && getWorld().getEntity(itemDisplaysIds.get(0)) instanceof ItemDisplay itemDisplay
-                ? itemDisplay.getItemStack()
-                : null;
+        return !itemDisplaysIds.isEmpty() && getWorld() != null
+                && getWorld().getEntity(itemDisplaysIds.get(0)) instanceof ItemDisplay itemDisplay ? itemDisplay.getItemStack() : null;
     }
 
 
@@ -220,12 +220,20 @@ public class Flag implements Serializable {
      * It remove the entities and remove the flag from the list of flags.
      */
     public void remove() {
-        ItemStack item = getItemStack().clone();
-        item.setAmount((int) (1 + (getSize() - 1) / FlagsH.getPlugin().getConfig().getDouble("increasingSizeStep")));
-        getWorld().dropItem(getLocation(), item);
-        removeEntities();
-        FlagsH.getPlugin().getFlags().remove(this);
-        playSound(Sound.BLOCK_WOOD_BREAK);
+        ItemStack itemStack = getItemStack();
+        if (itemStack == null) {
+            FlagsH.getPlugin().getLogger().warning(
+                    "Flag.remove(): itemStack of the flag is null. It might be cause by a change of the world or a /kill. This flag won't drop any item.");
+            removeEntities();
+            FlagsH.getPlugin().getFlags().remove(this);
+        } else {
+            ItemStack item = itemStack.clone();
+            item.setAmount((int) (1 + (getSize() - 1) / FlagsH.getPlugin().getConfig().getDouble("increasingSizeStep")));
+            getWorld().dropItem(getLocation(), item);
+            removeEntities();
+            FlagsH.getPlugin().getFlags().remove(this);
+            playSound(Sound.BLOCK_WOOD_BREAK);
+        }
     }
 
     // private methods ------------------------------------------------------------------------------------------------
@@ -247,7 +255,7 @@ public class Flag implements Serializable {
             return -90;
         } else {
             FlagsH.getPlugin().getLogger()
-                    .warning("Flag.getYawFromBehindAndBannerBlocks() : behind and banner blocks are at the same location.");
+                    .warning("Flag.getYawFromBehindAndBannerBlocks(): behind and banner blocks are at the same location.");
             return 0;
         }
     }
@@ -256,12 +264,15 @@ public class Flag implements Serializable {
      * Remove the entities of the flag.
      */
     private void removeEntities() {
-        for (UUID id : itemDisplaysIds) {
-            FlagsH.getPlugin().getServer().getEntity(id).remove();
-        }
-        for (UUID id : interactionsIds) {
-            FlagsH.getPlugin().getServer().getEntity(id).remove();
-        }
+        Stream.concat(itemDisplaysIds.stream(), interactionsIds.stream()).map(FlagsH.getPlugin().getServer()::getEntity).forEach(e -> {
+            if (e == null) {
+                FlagsH.getPlugin().getLogger().warning(() -> String.format(
+                        "Flag.removeEntities(): An entity is null an haven't been removed. It might be cause by a change of the world or a /kill. flag: %s",
+                        this));
+            } else {
+                e.remove();
+            }
+        });
         itemDisplaysIds.clear();
         interactionsIds.clear();
     }
