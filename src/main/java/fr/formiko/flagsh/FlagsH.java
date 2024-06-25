@@ -58,8 +58,9 @@ public class FlagsH {
      * @param itemStack ItemStack of the banner.
      * @return true if the flag have been created, false if not.
      */
-    public static boolean createFlag(@Nullable Player p, @Nonnull Block banner, @Nonnull Block behind, @Nonnull ItemStack itemStack) {
-        Flag f = new Flag(banner, p == null || p.isSneaking(), behind);
+    public static boolean createFlag(@Nullable Player p, @Nonnull Block banner, @Nonnull Block behind, @Nonnull ItemStack itemStack,
+            boolean flagNotBanner) {
+        Flag f = new Flag(banner, flagNotBanner, behind);
         f.create(itemStack);
         if (removeBannerItemFromPlayer(p)) {
             plugin.getFlags().add(f);

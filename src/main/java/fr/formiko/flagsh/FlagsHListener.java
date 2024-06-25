@@ -11,6 +11,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.inventory.EquipmentSlot;
 
 public class FlagsHListener implements Listener {
 
@@ -29,11 +30,23 @@ public class FlagsHListener implements Listener {
             Flag flag = FlagsH.getFlagAt(event.getBlock().getLocation());
             if (flag == null) {
                 boolean flagNotBanner = event.getPlayer().isSneaking();
+
+                // Special case for off hand
+                if (event.getHand().equals(EquipmentSlot.OFF_HAND)) {
+                    if (FlagsH.getPlugin().getConfig().get("offHandMod").equals("VANILLA")) {
+                        return;
+                    } else if (FlagsH.getPlugin().getConfig().get("offHandMod").equals("INVERTED")) {
+                        flagNotBanner = !flagNotBanner;
+                    }
+                }
+
+                // Disabled flag or banner
                 if ((flagNotBanner && !FlagsH.getPlugin().getConfig().getBoolean("flagEnable"))
                         || (!flagNotBanner && !FlagsH.getPlugin().getConfig().getBoolean("bannerEnable"))) {
                     return;
                 }
-                FlagsH.createFlag(event.getPlayer(), event.getBlockPlaced(), event.getBlockAgainst(), event.getItemInHand());
+
+                FlagsH.createFlag(event.getPlayer(), event.getBlockPlaced(), event.getBlockAgainst(), event.getItemInHand(), flagNotBanner);
             } else {
                 FlagsH.extendsFlag(flag, event.getBlockPlaced(), event.getPlayer());
             }

@@ -59,6 +59,11 @@ Each new banner added extend the flag of `increasingSizeStep`.
 
 `forbidenInteractGamemodes` is a list of gamemode in witch player can't interact with flags and banners. Usualy you only want player in adventure not being able to edit flag, but you might also want to prevent any player in survival to place or destroy banner.
 
+`offHandMod` possible values are:
+- "DEFAULT": No difference with main hand.
+- "VANILLA": Off hand only place vanilla banners. (Allow vanilla banner to be placed.)
+- "INVERTED": Off hand place banner in sneaking mode instead of flags. (Allow banner to be placed on switchable blocks.)
+
 
 ## Statistics
 [![bStats Graph Data](https://bstats.org/signatures/bukkit/flagsh.svg)](https://bstats.org/plugin/bukkit/FlagsH/19981)

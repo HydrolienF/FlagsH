@@ -32,6 +32,9 @@ public class FlagsHPlugin extends JavaPlugin {
         getConfig().addDefault("flagEnable", true);
         getConfig().addDefault("bannerEnable", true);
         getConfig().addDefault("forbidenInteractGamemodes", List.of("ADVENTURE"));
+        getConfig().addDefault("offHandMod", "DEFAULT");
+        // "DEFAULT": no difference with main hand, "VANILLA": off hand only place vanilla banners,
+        // "INVERTED": off hand place banner in sneaking mode instead of flags so that banner can be place on switchable blocks.
         getConfig().options().copyDefaults(true);
         saveConfig();
 
@@ -43,7 +46,8 @@ public class FlagsHPlugin extends JavaPlugin {
         if (flags == null) { // Init list if data file was not found or fail to be read.
             flags = new ArrayList<>();
         }
-        getLogger().info(() -> "FlagsH loaded " + flags.size() + " flags."); // since Java 8, we can use Supplier, which will be evaluated lazily
+        getLogger().info(() -> "FlagsH loaded " + flags.size() + " flags.");
+        // since Java 8, we can use Supplier, which will be evaluated lazily (better for performance when logging is disabled)
 
 
         getServer().getPluginManager().registerEvents(new FlagsHListener(), this);
