@@ -7,7 +7,7 @@ plugins {
 }
 
 group="fr.formiko.flagsh"
-version="4.0.3"
+version="4.1.0"
 description="Display banners as flags."
 
 repositories {

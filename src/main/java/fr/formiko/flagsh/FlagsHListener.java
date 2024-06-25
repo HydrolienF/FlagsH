@@ -11,7 +11,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.inventory.ItemStack;
 
 public class FlagsHListener implements Listener {
 
@@ -52,9 +51,9 @@ public class FlagsHListener implements Listener {
         if (isPlayerForbidenToInteract(event.getPlayer(), event.getRightClicked().getLocation())) {
             return;
         }
-        ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
         // if player click with a banner on hand on a flag : extend the flag
-        if (FlagsH.ALL_BANNERS.contains(item.getType())) {
+        if (FlagsH.ALL_BANNERS.contains(event.getPlayer().getInventory().getItemInMainHand().getType())
+                || FlagsH.ALL_BANNERS.contains(event.getPlayer().getInventory().getItemInOffHand().getType())) {
             Flag flag = FlagsH.getFlagLinkedToEntity(event.getRightClicked());
             if (flag != null) {
                 FlagsH.extendsFlag(flag, null, event.getPlayer());
@@ -84,7 +83,7 @@ public class FlagsHListener implements Listener {
     private Object[] effectiveParameters;
     private boolean testTowny = true;
     private boolean isPlayerForbidenToInteract(Player player, Location locationToInteract) {
-        if(testTowny){
+        if (testTowny) {
             try {
                 if (getCachePermission == null) {
                     Class<?> playerCacheUtil = Class.forName("com.palmergames.bukkit.towny.utils.PlayerCacheUtil");

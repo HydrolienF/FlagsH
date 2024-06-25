@@ -1,3 +1,11 @@
+# 4.1.0
+Banner placed from of hand can no longer remove an other item.
+
+
+# 4.0.3
+Explicit support for 1.21
+Work with [1.20 - 1.21]
+
 # 4.0.2
 Explicit support for 1.20.5 & 1.20.6.
 Work with [1.20 - 1.20.6]

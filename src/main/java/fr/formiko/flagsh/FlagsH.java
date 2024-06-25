@@ -56,12 +56,16 @@ public class FlagsH {
      * @param banner    Block where to place the banner.
      * @param behind    Block behind the banner.
      * @param itemStack ItemStack of the banner.
+     * @return true if the flag have been created, false if not.
      */
-    public static void createFlag(@Nullable Player p, @Nonnull Block banner, @Nonnull Block behind, @Nonnull ItemStack itemStack) {
+    public static boolean createFlag(@Nullable Player p, @Nonnull Block banner, @Nonnull Block behind, @Nonnull ItemStack itemStack) {
         Flag f = new Flag(banner, p == null || p.isSneaking(), behind);
         f.create(itemStack);
-        plugin.getFlags().add(f);
-        removeBannerItemFromPlayer(p);
+        if (removeBannerItemFromPlayer(p)) {
+            plugin.getFlags().add(f);
+            return true;
+        }
+        return false;
     }
 
     /** Return the offset to hit the wall depending on the block behind. */
@@ -85,27 +89,51 @@ public class FlagsH {
      * @param banner       the block of the banner
      * @param behind       the block behind the banner
      * @param bannerPlaced true if the banner have been placed on the block banner, false if it's in the player hand.
+     * @return true if the flag have been extended, false if not.
      */
-    public static void extendsFlag(@Nonnull Flag flag, @Nullable Block bannerPlaced, @Nullable Player playerToRemoveItemFrom) {
+    public static boolean extendsFlag(@Nonnull Flag flag, @Nullable Block bannerPlaced, @Nullable Player playerToRemoveItemFrom) {
         if (flag.getSize() >= plugin.getConfig().getDouble("maxFlagSize")) {
             if (bannerPlaced != null) {
                 bannerPlaced.breakNaturally();
             }
             flag.playSound(Sound.ENTITY_VILLAGER_NO);
         } else {
-            flag.extend((float) Math.min(flag.getSize() + plugin.getConfig().getDouble("increasingSizeStep"),
-                    plugin.getConfig().getDouble("maxFlagSize")));
-            removeBannerItemFromPlayer(playerToRemoveItemFrom);
+            if (removeBannerItemFromPlayer(playerToRemoveItemFrom)) {
+                flag.extend((float) Math.min(flag.getSize() + plugin.getConfig().getDouble("increasingSizeStep"),
+                        plugin.getConfig().getDouble("maxFlagSize")));
+                return true;
+            }
         }
+        return false;
     }
 
 
     // Usefull methods ------------------------------------------------------------------------------------------------
 
-    private static void removeBannerItemFromPlayer(@Nullable Player playerToRemoveItemFrom) {
+    /**
+     * Remove a banner item from a player.
+     * 
+     * @param playerToRemoveItemFrom the player to remove the item from.
+     * @return true if the item have been removed, or if the player is in creative mode, false if not.
+     */
+    private static boolean removeBannerItemFromPlayer(@Nullable Player playerToRemoveItemFrom) {
         if (playerToRemoveItemFrom != null && playerToRemoveItemFrom.getGameMode() != GameMode.CREATIVE) {
-            playerToRemoveItemFrom.getInventory().getItemInMainHand()
-                    .setAmount(playerToRemoveItemFrom.getInventory().getItemInMainHand().getAmount() - 1);
+            // If have a banner in main hand
+            if (ALL_BANNERS.contains(playerToRemoveItemFrom.getInventory().getItemInMainHand().getType())) {
+                playerToRemoveItemFrom.getInventory().getItemInMainHand()
+                        .setAmount(playerToRemoveItemFrom.getInventory().getItemInMainHand().getAmount() - 1);
+                return true;
+                // If have a banner in off hand
+            } else if (ALL_BANNERS.contains(playerToRemoveItemFrom.getInventory().getItemInOffHand().getType())) {
+                playerToRemoveItemFrom.getInventory().getItemInOffHand()
+                        .setAmount(playerToRemoveItemFrom.getInventory().getItemInOffHand().getAmount() - 1);
+                return true;
+                // If don't have a banner
+            } else {
+                return false;
+            }
+        } else {
+            return true;
         }
     }
 
