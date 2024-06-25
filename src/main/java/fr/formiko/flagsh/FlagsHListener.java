@@ -29,24 +29,7 @@ public class FlagsHListener implements Listener {
         if (FlagsH.ALL_WALL_BANNERS.contains(event.getBlock().getType())) {
             Flag flag = FlagsH.getFlagAt(event.getBlock().getLocation());
             if (flag == null) {
-                boolean flagNotBanner = event.getPlayer().isSneaking();
-
-                // Special case for off hand
-                if (event.getHand().equals(EquipmentSlot.OFF_HAND)) {
-                    if (FlagsH.getPlugin().getConfig().get("offHandMod").equals("VANILLA")) {
-                        return;
-                    } else if (FlagsH.getPlugin().getConfig().get("offHandMod").equals("INVERTED")) {
-                        flagNotBanner = !flagNotBanner;
-                    }
-                }
-
-                // Disabled flag or banner
-                if ((flagNotBanner && !FlagsH.getPlugin().getConfig().getBoolean("flagEnable"))
-                        || (!flagNotBanner && !FlagsH.getPlugin().getConfig().getBoolean("bannerEnable"))) {
-                    return;
-                }
-
-                FlagsH.createFlag(event.getPlayer(), event.getBlockPlaced(), event.getBlockAgainst(), event.getItemInHand(), flagNotBanner);
+                createNewFlag(event);
             } else {
                 FlagsH.extendsFlag(flag, event.getBlockPlaced(), event.getPlayer());
             }
@@ -55,9 +38,35 @@ public class FlagsHListener implements Listener {
     }
 
     /**
+     * Create a new flag or banner depending on the player sneaking status and the plugin configuration.
+     * 
+     * @param event BlockPlaceEvent from {@code onPlace}
+     */
+    private void createNewFlag(@Nonnull BlockPlaceEvent event) {
+        boolean flagNotBanner = event.getPlayer().isSneaking();
+
+        // Special case for off hand
+        if (event.getHand().equals(EquipmentSlot.OFF_HAND)) {
+            if (FlagsH.getPlugin().getConfig().get("offHandMod").equals("VANILLA")) {
+                return;
+            } else if (FlagsH.getPlugin().getConfig().get("offHandMod").equals("INVERTED")) {
+                flagNotBanner = !flagNotBanner;
+            }
+        }
+
+        // Disabled flag or banner
+        if ((flagNotBanner && !FlagsH.getPlugin().getConfig().getBoolean("flagEnable"))
+                || (!flagNotBanner && !FlagsH.getPlugin().getConfig().getBoolean("bannerEnable"))) {
+            return;
+        }
+
+        FlagsH.createFlag(event.getPlayer(), event.getBlockPlaced(), event.getBlockAgainst(), event.getItemInHand(), flagNotBanner);
+    }
+
+    /**
      * React to player right clicking on a flag entity with a banner in hand.
      * 
-     * @param event
+     * @param event PlayerInteractEntityEvent triggered when a player interacts with an entity
      */
     @EventHandler(ignoreCancelled = true)
     public void onInteractWithFlagEntity(@Nonnull PlayerInteractEntityEvent event) {
