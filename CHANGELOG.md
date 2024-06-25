@@ -1,10 +1,11 @@
 # 4.1.0
-Banner placed from of hand can no longer remove an other item.
-
+Banner placed from off hand can no longer remove an other item (#10).
+Banner placed with off hand can have alternate mods. Alternates modes allow to place vanilla banner or, banner in switchable block instead of flags (#7).
 
 # 4.0.3
 Explicit support for 1.21
 Work with [1.20 - 1.21]
+Needs Java 21
 
 # 4.0.2
 Explicit support for 1.20.5 & 1.20.6.
