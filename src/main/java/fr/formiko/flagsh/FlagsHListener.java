@@ -29,7 +29,7 @@ public class FlagsHListener implements Listener {
         // if a banner is placed
         if (FlagsH.ALL_WALL_BANNERS.contains(event.getBlock().getType())) {
             // if player is not allowed to interact with flag at this location, cancel the event
-            if (isPlayerForbidenToInteract(event.getPlayer(), event.getBlockPlaced().getLocation())) {
+            if (isPlayerForbiddenToInteract(event.getPlayer(), event.getBlockPlaced().getLocation())) {
                 FlagsHPlugin.getInstance().debug(() -> "Player " + event.getPlayer().getName() + " is not allowed to interact with flag at "
                         + event.getBlockPlaced().getLocation());
                 event.setCancelled(true);
@@ -94,7 +94,7 @@ public class FlagsHListener implements Listener {
             Flag flag = FlagsH.getFlagLinkedToEntity(event.getRightClicked());
             if (flag != null) {
                 // Extend the flag if the player is allowed to interact with it
-                if (!isPlayerForbidenToInteract(event.getPlayer(), event.getRightClicked().getLocation())) {
+                if (!isPlayerForbiddenToInteract(event.getPlayer(), event.getRightClicked().getLocation())) {
                     FlagsH.extendsFlag(flag, null, event.getPlayer());
                     FlagsHPlugin.getInstance().debug(
                             () -> "Flag extended by " + event.getPlayer().getName() + " at " + event.getRightClicked().getLocation());
@@ -115,7 +115,7 @@ public class FlagsHListener implements Listener {
     public void onHitFlagEntity(@Nonnull EntityDamageByEntityEvent event) {
         Flag flag = FlagsH.getFlagLinkedToEntity(event.getEntity());
         if (flag != null) {
-            if (event.getDamager() instanceof Player p && !isPlayerForbidenToInteract(p, event.getEntity().getLocation())) {
+            if (event.getDamager() instanceof Player p && !isPlayerForbiddenToInteract(p, event.getEntity().getLocation())) {
                 flag.remove();
                 FlagsHPlugin.getInstance().debug(() -> "Flag removed by " + p.getName() + " at " + event.getEntity().getLocation());
             } else {
@@ -129,7 +129,7 @@ public class FlagsHListener implements Listener {
     private Method getCachePermission;
     private Object[] effectiveParameters;
     private boolean testTowny = true;
-    private boolean isPlayerForbidenToInteract(Player player, Location locationToInteract) {
+    private boolean isPlayerForbiddenToInteract(Player player, Location locationToInteract) {
         if (testTowny) {
             try {
                 if (getCachePermission == null) {
