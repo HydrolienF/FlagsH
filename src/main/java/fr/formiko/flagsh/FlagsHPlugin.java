@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import javax.annotation.Nonnull;
@@ -27,6 +28,7 @@ public class FlagsHPlugin extends JavaPlugin {
 
         new Metrics(this, 19981);
 
+        getConfig().addDefault("debug", false);
         getConfig().addDefault("maxFlagSize", 10f);
         getConfig().addDefault("increasingSizeStep", 0.5f);
         getConfig().addDefault("flagEnable", true);
@@ -92,4 +94,17 @@ public class FlagsHPlugin extends JavaPlugin {
             loadFlags();
         }
     }
+
+    public void debug(String msg) {
+        if (getConfig().getBoolean("debug")) {
+            getLogger().info(msg);
+        }
+    }
+    public void debug(Supplier<String> msgSupplier) {
+        if (getConfig().getBoolean("debug")) {
+            getLogger().info(msgSupplier);
+        }
+    }
+
+    public static FlagsHPlugin getInstance() { return getPlugin(FlagsHPlugin.class); }
 }
