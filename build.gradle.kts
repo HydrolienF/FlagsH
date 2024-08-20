@@ -7,7 +7,7 @@ plugins {
 }
 
 group="fr.formiko.flagsh"
-version="4.2.1"
+version="4.3.0"
 description="Display banners as flags."
 
 repositories {
@@ -20,7 +20,7 @@ repositories {
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT")
-    compileOnly("com.palmergames.bukkit.towny:towny:0.100.2.0")
+    compileOnly("com.palmergames.bukkit.towny:towny:0.100.3.12")
     implementation("org.bstats:bstats-bukkit:3.0.2")
     implementation("co.aikar:acf-paper:0.5.1-SNAPSHOT")
 }
@@ -58,11 +58,15 @@ tasks {
         }
     }
     runServer {
+        downloadPlugins {
+            github("TownyAdvanced", "Towny", "0.100.3.12", "towny-0.100.3.12.jar")
+        }
         // Configure the Minecraft version for our task.
         // This is the only required configuration besides applying the plugin.
         // Your plugin's jar (or shadowJar if present) will be used automatically.
         minecraftVersion("1.21.1")
     }
+    // runPaper.folia.registerTask()
 }
 
 publishing {
