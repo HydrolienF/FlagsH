@@ -3,7 +3,7 @@ version: $version
 main: $group.${name}Plugin
 description: $description
 author: Hydrolien
-website: https://github.com/HydrolienF$name
+website: https://github.com/HydrolienF/$name
 api-version: "$apiVersion"
 folia-supported: true
 softdepend: [Towny]
