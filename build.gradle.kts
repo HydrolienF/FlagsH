@@ -2,12 +2,12 @@ plugins {
     id("java")
     id("io.github.goooler.shadow") version "8.1.7"
     `maven-publish` // Add ./gradlew publishToMavenLocal
-    id("xyz.jpenilla.run-paper") version "2.3.0"
+    id("xyz.jpenilla.run-paper") version "2.3.1"
     id("org.sonarqube") version "5.0.0.4638"
 }
 
 group="fr.formiko.flagsh"
-version="4.3.0"
+version="4.3.2"
 description="Display banners as flags."
 
 repositories {
@@ -19,9 +19,9 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT")
-    compileOnly("com.palmergames.bukkit.towny:towny:0.100.3.12")
-    implementation("org.bstats:bstats-bukkit:3.0.2")
+    compileOnly("io.papermc.paper:paper-api:1.21.3-R0.1-SNAPSHOT")
+    compileOnly("com.palmergames.bukkit.towny:towny:0.101.0.0")
+    implementation("org.bstats:bstats-bukkit:3.1.0")
     implementation("co.aikar:acf-paper:0.5.1-SNAPSHOT")
 }
 
@@ -59,12 +59,12 @@ tasks {
     }
     runServer {
         downloadPlugins {
-            github("TownyAdvanced", "Towny", "0.100.3.12", "towny-0.100.3.12.jar")
+            github("TownyAdvanced", "Towny", "0.100.4.14", "towny-0.100.4.14.jar") // we can't use the latest release because it's inside a zip.
         }
         // Configure the Minecraft version for our task.
         // This is the only required configuration besides applying the plugin.
         // Your plugin's jar (or shadowJar if present) will be used automatically.
-        minecraftVersion("1.21.1")
+        minecraftVersion("1.21.3")
     }
     // runPaper.folia.registerTask()
 }
