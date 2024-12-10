@@ -7,7 +7,7 @@ plugins {
 }
 
 group="fr.formiko.flagsh"
-version="4.3.3"
+version="4.4.0"
 description="Display banners as flags."
 
 repositories {
@@ -23,6 +23,8 @@ dependencies {
     compileOnly("com.palmergames.bukkit.towny:towny:0.101.0.0")
     implementation("org.bstats:bstats-bukkit:3.1.0")
     implementation("co.aikar:acf-paper:0.5.1-SNAPSHOT")
+    implementation("com.fasterxml.jackson.core:jackson-core:2.18.2")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.18.2")
 }
 
 java {
@@ -35,6 +37,7 @@ tasks {
         sequenceOf(
             "co.aikar",
             "org.bstats",
+            "com.fasterxml.jackson.core"
         ).forEach { pkg ->
             relocate(pkg, "$prefix.$pkg")
         }
