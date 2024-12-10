@@ -12,13 +12,16 @@ import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Interaction;
 import org.bukkit.entity.ItemDisplay;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 import org.joml.Matrix4f;
 
 public class Flag implements Serializable {
     private static final long serialVersionUID = 1L;
+    private UUID id; // final (But Jackson need it not final)
     private List<UUID> itemDisplaysIds; // final (But Jackson need it not final)
     private List<UUID> interactionsIds; // final (But Jackson need it not final)
     private int x; // final (But Jackson need it not final)
@@ -44,6 +47,7 @@ public class Flag implements Serializable {
      * @param offsetToFitTheWall offset to place flag against the wall
      */
     public Flag(int x, int y, int z, @Nonnull UUID worldId, boolean flagNotBanner, int yaw, float offsetToFitTheWall) {
+        this.id = UUID.randomUUID();
         this.x = x;
         this.y = y;
         this.z = z;
@@ -51,9 +55,9 @@ public class Flag implements Serializable {
         this.flagNotBanner = flagNotBanner;
         this.yaw = yaw;
         this.offsetToFitTheWall = offsetToFitTheWall;
-        size = 1;
-        itemDisplaysIds = new ArrayList<>();
-        interactionsIds = new ArrayList<>();
+        this.size = 1;
+        this.itemDisplaysIds = new ArrayList<>();
+        this.interactionsIds = new ArrayList<>();
     }
     public Flag(@Nonnull Block block, boolean flagNotBanner, @Nonnull Block behind) {
         this(block.getX(), block.getY(), block.getZ(), block.getWorld().getUID(), flagNotBanner,
@@ -108,6 +112,17 @@ public class Flag implements Serializable {
 
         // String json = toJson();
         // FlagsH.getPlugin().debug("Create a flag:" + json);
+        
+        // For all Entity in itemDisplaysIds & interactionsIds add a PersistentDataContainer with the flag data
+        getEntitiesStream().forEach(e -> {
+            if (e != null) {
+                e.getPersistentDataContainer().set(FlagsH.getFlagDataNamespacedKey(), PersistentDataType.STRING, toJson());
+            }
+        });
+    }
+
+    private Stream<Entity> getEntitiesStream() {
+        return Stream.concat(itemDisplaysIds.stream(), interactionsIds.stream()).map(FlagsH.getPlugin().getServer()::getEntity);
     }
 
     private void addItemDisplayForFlag(@Nonnull ItemStack itemStack, float offsetToHitTheWall, boolean offsetToHitTheWallInX) {
@@ -229,13 +244,19 @@ public class Flag implements Serializable {
             FlagsH.getPlugin().getLogger().warning(
                     "Flag.remove(): itemStack of the flag is null. It might be cause by a change of the world or a /kill. This flag won't drop any item.");
             removeEntities();
-            FlagsH.getPlugin().getFlags().remove(this);
+            boolean removed = FlagsH.getPlugin().getFlags().remove(this);
+            if (!removed) {
+                FlagsH.getPlugin().getLogger().warning("Flag.remove(): flag not removed from the list of flags. flag: " + this);
+            }
         } else {
             ItemStack item = itemStack.clone();
             item.setAmount((int) (1 + (getSize() - 1) / FlagsH.getPlugin().getConfig().getDouble("increasingSizeStep")));
             getWorld().dropItem(getLocation(), item);
             removeEntities();
-            FlagsH.getPlugin().getFlags().remove(this);
+            boolean removed = FlagsH.getPlugin().getFlags().remove(this);
+            if (!removed) {
+                FlagsH.getPlugin().getLogger().warning("Flag.remove(): flag not removed from the list of flags. flag: " + this);
+            }
             playSound(Sound.BLOCK_WOOD_BREAK);
         }
     }
@@ -268,7 +289,7 @@ public class Flag implements Serializable {
      * Remove the entities of the flag.
      */
     private void removeEntities() {
-        Stream.concat(itemDisplaysIds.stream(), interactionsIds.stream()).map(FlagsH.getPlugin().getServer()::getEntity).forEach(e -> {
+        getEntitiesStream().forEach(e -> {
             if (e == null) {
                 FlagsH.getPlugin().getLogger().warning(() -> String.format(
                         "Flag.removeEntities(): An entity is null an haven't been removed. It might be cause by a change of the world or a /kill. flag: %s",
@@ -342,29 +363,13 @@ public class Flag implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof Flag) {
-            Flag flag = (Flag) obj;
-            return flag.getX() == x && flag.getY() == y && flag.getZ() == z
-                    && flag.flagNotBanner == flagNotBanner
-                    && flag.getSize() == size
-                    && flag.getYaw() == yaw
-                    && flag.offsetToFitTheWall == offsetToFitTheWall
-                    && flag.getWorldId().equals(worldId)
-                    && isSameUUIDList(flag.getItemDisplaysIds(), itemDisplaysIds)
-                    && isSameUUIDList(flag.getInteractionsIds(), interactionsIds);
+        if (this == obj) {
+            return true;
+        }
+        if (obj instanceof Flag flag) {
+            return flag.id != null && id != null && flag.id.equals(id);
         }
         return false;
-    }
-    private boolean isSameUUIDList(List<UUID> l1, List<UUID> l2) {
-        if (l1.size() != l2.size()) {
-            return false;
-        }
-        for (int i = 0; i < l1.size(); i++) {
-            if (!l1.get(i).equals(l2.get(i))) {
-                return false;
-            }
-        }
-        return true;
     }
 
     public static @Nonnull Flag fromJson(@Nonnull String json) {

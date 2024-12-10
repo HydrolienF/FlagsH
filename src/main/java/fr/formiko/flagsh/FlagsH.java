@@ -7,12 +7,14 @@ import javax.annotation.Nullable;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -44,6 +46,7 @@ public class FlagsH {
             Material.RED_SANDSTONE_WALL, Material.SANDSTONE_WALL, Material.MOSSY_COBBLESTONE_WALL, Material.MOSSY_STONE_BRICK_WALL,
             Material.END_STONE_BRICK_WALL, Material.COBBLED_DEEPSLATE_WALL, Material.MUD_BRICK_WALL);
     private static ObjectMapper objectMapper;
+    public static String FLAG_DATA_KEY = "flagsh_data";
 
     private FlagsH() {}
 
@@ -178,7 +181,17 @@ public class FlagsH {
     }
     /** Get a flag from it's interaction. */
     public static @Nullable Flag getFlagLinkedToEntity(@Nonnull Entity entity) {
+        if(entity.getPersistentDataContainer().has(getFlagDataNamespacedKey(), PersistentDataType.STRING)){
+            String json = entity.getPersistentDataContainer().get(getFlagDataNamespacedKey(), PersistentDataType.STRING);
+            FlagsHPlugin.getInstance().debug(() -> "Flag data found on entity " + entity.getUniqueId() + " : " + json);
+            return Flag.fromJson(json);
+        }
+
         return getFlagLinkedToEntity(entity.getUniqueId());
+    }
+
+    public static NamespacedKey getFlagDataNamespacedKey() {
+        return new NamespacedKey(FlagsH.getPlugin(), FLAG_DATA_KEY);
     }
 
 }
