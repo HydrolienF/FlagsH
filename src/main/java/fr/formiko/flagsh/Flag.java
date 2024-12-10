@@ -19,16 +19,16 @@ import org.joml.Matrix4f;
 
 public class Flag implements Serializable {
     private static final long serialVersionUID = 1L;
-    private final List<UUID> itemDisplaysIds;
-    private final List<UUID> interactionsIds;
-    private final int x;
-    private final int y;
-    private final int z;
-    private final int yaw;
-    private final float offsetToFitTheWall;
-    private final UUID worldId;
+    private List<UUID> itemDisplaysIds; // final (But Jackson need it not final)
+    private List<UUID> interactionsIds; // final (But Jackson need it not final)
+    private int x; // final (But Jackson need it not final)
+    private int y; // final (But Jackson need it not final)
+    private int z; // final (But Jackson need it not final)
+    private int yaw; // final (But Jackson need it not final)
+    private float offsetToFitTheWall; // final (But Jackson need it not final)
+    private UUID worldId; // final (But Jackson need it not final)
     private float size;
-    private final boolean flagNotBanner; // false = banner, true = flag
+    private boolean flagNotBanner; // false = banner, true = flag // final (But Jackson need it not final)
 
     /**
      * Create a flag or banner.
@@ -59,6 +59,8 @@ public class Flag implements Serializable {
         this(block.getX(), block.getY(), block.getZ(), block.getWorld().getUID(), flagNotBanner,
                 getYawFromBehindAndBannerBlocks(block, behind), FlagsH.getOffsetToHitWall(behind.getType()) + (flagNotBanner ? 0f : 0.3f));
     }
+    // Only for jackson
+    private Flag() {}
 
     public @Nonnull List<UUID> getItemDisplaysIds() { return itemDisplaysIds; }
     public @Nonnull List<UUID> getInteractionsIds() { return interactionsIds; }
@@ -104,6 +106,8 @@ public class Flag implements Serializable {
             addInteractionForBanner();
         }
 
+        // String json = toJson();
+        // FlagsH.getPlugin().debug("Create a flag:" + json);
     }
 
     private void addItemDisplayForFlag(@Nonnull ItemStack itemStack, float offsetToHitTheWall, boolean offsetToHitTheWallInX) {
@@ -335,4 +339,46 @@ public class Flag implements Serializable {
 
     @Override
     public @Nonnull String toString() { return (flagNotBanner ? "Flag" : "Banner") + " (" + x + ", " + y + ", " + z + ") size: " + size; }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Flag) {
+            Flag flag = (Flag) obj;
+            return flag.getX() == x && flag.getY() == y && flag.getZ() == z
+                    && flag.flagNotBanner == flagNotBanner
+                    && flag.getSize() == size
+                    && flag.getYaw() == yaw
+                    && flag.offsetToFitTheWall == offsetToFitTheWall
+                    && flag.getWorldId().equals(worldId)
+                    && isSameUUIDList(flag.getItemDisplaysIds(), itemDisplaysIds)
+                    && isSameUUIDList(flag.getInteractionsIds(), interactionsIds);
+        }
+        return false;
+    }
+    private boolean isSameUUIDList(List<UUID> l1, List<UUID> l2) {
+        if (l1.size() != l2.size()) {
+            return false;
+        }
+        for (int i = 0; i < l1.size(); i++) {
+            if (!l1.get(i).equals(l2.get(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static @Nonnull Flag fromJson(@Nonnull String json) {
+        try {
+            return FlagsH.getObjectMapper().readValue(json, Flag.class);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Flag.fromJson(): " + e.getMessage());
+        }
+    }
+    public @Nonnull String toJson() {
+        try {
+            return FlagsH.getObjectMapper().writeValueAsString(this);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Flag.toJson(): " + e.getMessage());
+        }
+    }
 }

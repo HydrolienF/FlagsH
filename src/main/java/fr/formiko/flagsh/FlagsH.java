@@ -13,6 +13,8 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class FlagsH {
     private static FlagsHPlugin plugin;
@@ -41,6 +43,7 @@ public class FlagsH {
             Material.POLISHED_BLACKSTONE_WALL, Material.POLISHED_DEEPSLATE_WALL, Material.PRISMARINE_WALL, Material.RED_NETHER_BRICK_WALL,
             Material.RED_SANDSTONE_WALL, Material.SANDSTONE_WALL, Material.MOSSY_COBBLESTONE_WALL, Material.MOSSY_STONE_BRICK_WALL,
             Material.END_STONE_BRICK_WALL, Material.COBBLED_DEEPSLATE_WALL, Material.MUD_BRICK_WALL);
+    private static ObjectMapper objectMapper;
 
     private FlagsH() {}
 
@@ -49,6 +52,18 @@ public class FlagsH {
 
     public static void setPlugin(@Nonnull FlagsHPlugin plugin) { FlagsH.plugin = plugin; }
     public static @Nonnull FlagsHPlugin getPlugin() { return plugin; }
+    public static @Nonnull ObjectMapper getObjectMapper() {
+        if(objectMapper == null) {
+            objectMapper = new ObjectMapper();
+            objectMapper.setVisibility(objectMapper.getSerializationConfig().getDefaultVisibilityChecker()
+                .withFieldVisibility(JsonAutoDetect.Visibility.ANY)
+                .withGetterVisibility(JsonAutoDetect.Visibility.NONE)
+                .withSetterVisibility(JsonAutoDetect.Visibility.NONE)
+                .withCreatorVisibility(JsonAutoDetect.Visibility.NONE)
+                .withIsGetterVisibility(JsonAutoDetect.Visibility.NONE));
+        }
+        return objectMapper;
+    }
     /**
      * Create a flag.
      * 
