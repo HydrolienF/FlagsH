@@ -19,7 +19,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.21.3-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
     compileOnly("com.palmergames.bukkit.towny:towny:0.101.0.0")
     implementation("org.bstats:bstats-bukkit:3.1.0")
     implementation("co.aikar:acf-paper:0.5.1-SNAPSHOT")
@@ -62,12 +62,12 @@ tasks {
     }
     runServer {
         downloadPlugins {
-            github("TownyAdvanced", "Towny", "0.100.4.14", "towny-0.100.4.14.jar") // we can't use the latest release because it's inside a zip.
+            github("TownyAdvanced", "Towny", "0.101.0.2", "towny-0.101.0.2.jar") // we can't use the latest release because it's inside a zip.
         }
         // Configure the Minecraft version for our task.
         // This is the only required configuration besides applying the plugin.
         // Your plugin's jar (or shadowJar if present) will be used automatically.
-        minecraftVersion("1.21.3")
+        minecraftVersion("1.21.4")
     }
     // runPaper.folia.registerTask()
 }
