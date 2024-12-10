@@ -1,0 +1,20 @@
+debug: false
+
+# Enable or disable the plugins for flags (horizontal banners) and banners (vertical banners).
+flagEnable: true
+bannerEnable: true
+
+# Max size of a flag. Default size is 1. A size of 2 means that the flag is 2 times larger and 2 times longer. If a player try to increase flag size over the limit, then flag won't be extended, banner item will drop to the ground and angry NPC sound will be played.
+maxFlagSize: 10.0
+# Each new banner added extend the flag of
+increasingSizeStep: 0.5
+
+# Off hand mod. Possible values are:
+# - "DEFAULT": No difference with main hand.
+# - "VANILLA": Off hand only place vanilla banners. (Allow vanilla banner to be placed.)
+# - "INVERTED": Off hand place banner in sneaking mode instead of flags. (Allow banner to be placed on switchable blocks.)
+offHandMod: DEFAULT
+
+# List of gamemode in which player can't interact with flags and banners. Usually you only want player in adventure not being able to edit flag, but you might also want to prevent any player in survival to place or destroy banner.
+forbidenInteractGamemodes:
+- ADVENTURE

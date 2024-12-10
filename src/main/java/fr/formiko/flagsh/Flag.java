@@ -81,7 +81,7 @@ public class Flag implements Serializable {
     /**
      * Create the flag minecraft entities that will be displayed & used as hitbox.
      * 
-     * @param itemStack item witch texture will be used
+     * @param itemStack item which texture will be used
      */
     public void create(@Nonnull ItemStack itemStack) {
         float offsetToHitTheWall = offsetToFitTheWall - ((isFlag() ? 0.335f : 0.05f) * (size - 1f));

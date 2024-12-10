@@ -28,17 +28,7 @@ public class FlagsHPlugin extends JavaPlugin {
 
         new Metrics(this, 19981);
 
-        getConfig().addDefault("debug", false);
-        getConfig().addDefault("maxFlagSize", 10f);
-        getConfig().addDefault("increasingSizeStep", 0.5f);
-        getConfig().addDefault("flagEnable", true);
-        getConfig().addDefault("bannerEnable", true);
-        getConfig().addDefault("forbidenInteractGamemodes", List.of("ADVENTURE"));
-        getConfig().addDefault("offHandMod", "DEFAULT");
-        // "DEFAULT": no difference with main hand, "VANILLA": off hand only place vanilla banners,
-        // "INVERTED": off hand place banner in sneaking mode instead of flags so that banner can be place on switchable blocks.
-        getConfig().options().copyDefaults(true);
-        saveConfig();
+        saveDefaultConfig();
 
 
         // Load flags from data file.
