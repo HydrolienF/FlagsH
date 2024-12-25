@@ -1,7 +1,6 @@
 package fr.formiko.flagsh;
 
 import java.lang.reflect.Method;
-import java.util.List;
 import javax.annotation.Nonnull;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -61,17 +60,16 @@ public class FlagsHListener implements Listener {
 
         // Special case for off hand
         if (event.getHand().equals(EquipmentSlot.OFF_HAND)) {
-            if (FlagsH.getPlugin().getConfig().get("offHandMod").equals("VANILLA")) {
+            if (FlagsHConfig.OffHandMod.VANILLA.equals(FlagsHConfig.offHandMod())) {
                 FlagsHPlugin.getInstance().debug("Off hand mod is VANILLA, canceling flag creation");
                 return false;
-            } else if (FlagsH.getPlugin().getConfig().get("offHandMod").equals("INVERTED")) {
+            } else if (FlagsHConfig.OffHandMod.INVERTED.equals(FlagsHConfig.offHandMod())) {
                 flagNotBanner = !flagNotBanner;
             }
         }
 
         // Disabled flag or banner
-        if ((flagNotBanner && !FlagsH.getPlugin().getConfig().getBoolean("flagEnable"))
-                || (!flagNotBanner && !FlagsH.getPlugin().getConfig().getBoolean("bannerEnable"))) {
+        if ((flagNotBanner && !FlagsHConfig.flagEnable()) || (!flagNotBanner && !FlagsHConfig.bannerEnable())) {
             FlagsHPlugin.getInstance().debug("Flag or banner creation is disabled, canceling flag creation");
             return false;
         }
@@ -139,6 +137,8 @@ public class FlagsHListener implements Listener {
                     Object build = actionType.getEnumConstants()[0];
 
                     effectiveParameters = new Object[] {player, locationToInteract, Material.RED_BANNER, build};
+                    // PlayerCacheUtil.getCachePermission(player, locationToInteract, Material.RED_BANNER,
+                    // TownyPermission.ActionType.BUILD);
                     getCachePermission = playerCacheUtil.getMethod("getCachePermission", formalParameters);
                 } else {
                     effectiveParameters[0] = player;
@@ -155,6 +155,6 @@ public class FlagsHListener implements Listener {
                 testTowny = false;
             }
         }
-        return FlagsH.getPlugin().getConfig().getList("forbidenInteractGamemodes", List.of()).contains(player.getGameMode().toString());
+        return FlagsHConfig.isForbidenInteractGamemodes(player.getGameMode());
     }
 }

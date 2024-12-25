@@ -19,7 +19,6 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class FlagsH {
-    private static FlagsHPlugin plugin;
     public static final List<Material> ALL_BANNERS = List.of(Material.WHITE_BANNER, Material.ORANGE_BANNER, Material.MAGENTA_BANNER,
             Material.LIGHT_BLUE_BANNER, Material.YELLOW_BANNER, Material.LIME_BANNER, Material.PINK_BANNER, Material.GRAY_BANNER,
             Material.LIGHT_GRAY_BANNER, Material.CYAN_BANNER, Material.PURPLE_BANNER, Material.BLUE_BANNER, Material.BROWN_BANNER,
@@ -53,8 +52,7 @@ public class FlagsH {
 
     // create ---------------------------------------------------------------------------------------------------------
 
-    public static void setPlugin(@Nonnull FlagsHPlugin plugin) { FlagsH.plugin = plugin; }
-    public static @Nonnull FlagsHPlugin getPlugin() { return plugin; }
+    public static @Nonnull FlagsHPlugin getPlugin() { return FlagsHPlugin.getInstance(); }
     public static @Nonnull ObjectMapper getObjectMapper() {
         if(objectMapper == null) {
             objectMapper = new ObjectMapper();
@@ -81,7 +79,7 @@ public class FlagsH {
         Flag f = new Flag(banner, flagNotBanner, behind);
         f.create(itemStack);
         if (removeBannerItemFromPlayer(p)) {
-            plugin.getFlags().add(f);
+            getPlugin().getFlags().add(f);
             return true;
         }
         return false;
@@ -111,15 +109,14 @@ public class FlagsH {
      * @return true if the flag have been extended, false if not.
      */
     public static boolean extendsFlag(@Nonnull Flag flag, @Nullable Block bannerPlaced, @Nullable Player playerToRemoveItemFrom) {
-        if (flag.getSize() >= plugin.getConfig().getDouble("maxFlagSize")) {
+        if (flag.getSize() >= FlagsHConfig.maxFlagSize()) {
             if (bannerPlaced != null) {
                 bannerPlaced.breakNaturally();
             }
             flag.playSound(Sound.ENTITY_VILLAGER_NO);
         } else {
             if (removeBannerItemFromPlayer(playerToRemoveItemFrom)) {
-                flag.extend((float) Math.min(flag.getSize() + plugin.getConfig().getDouble("increasingSizeStep"),
-                        plugin.getConfig().getDouble("maxFlagSize")));
+                flag.extend((float) Math.min(flag.getSize() + FlagsHConfig.increasingSizeStep(), FlagsHConfig.maxFlagSize()));
                 return true;
             }
         }
@@ -158,7 +155,7 @@ public class FlagsH {
 
     /** Get a flag from it's coordinates. */
     public static @Nullable Flag getFlagAt(int x, int y, int z, @Nonnull World world) {
-        for (Flag flag : plugin.getFlags()) {
+        for (Flag flag : getPlugin().getFlags()) {
             if (flag.getX() == x && flag.getY() == y && flag.getZ() == z && flag.getWorldId().equals(world.getUID())) {
                 return flag;
             }
@@ -172,7 +169,7 @@ public class FlagsH {
 
     /** Get a flag from it's interaction. */
     public static @Nullable Flag getFlagLinkedToEntity(@Nonnull UUID entityUuid) {
-        for (Flag flag : plugin.getFlags()) {
+        for (Flag flag : getPlugin().getFlags()) {
             if (flag.getInteractionsIds().contains(entityUuid)) {
                 return flag;
             }

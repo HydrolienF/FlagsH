@@ -250,7 +250,7 @@ public class Flag implements Serializable {
             }
         } else {
             ItemStack item = itemStack.clone();
-            item.setAmount((int) (1 + (getSize() - 1) / FlagsH.getPlugin().getConfig().getDouble("increasingSizeStep")));
+            item.setAmount((int) (1 + (getSize() - 1) / FlagsHConfig.increasingSizeStep()));
             getWorld().dropItem(getLocation(), item);
             removeEntities();
             boolean removed = FlagsH.getPlugin().getFlags().remove(this);

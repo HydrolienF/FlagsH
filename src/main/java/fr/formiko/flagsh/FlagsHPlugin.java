@@ -24,11 +24,10 @@ public class FlagsHPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        FlagsH.setPlugin(this);
-
         new Metrics(this, 19981);
 
         saveDefaultConfig();
+        FlagsHConfig.reload();
 
 
         // Load flags from data file.
@@ -83,15 +82,16 @@ public class FlagsHPlugin extends JavaPlugin {
         if (saveFlags()) {
             loadFlags();
         }
+        FlagsHConfig.reload();
     }
 
     public void debug(String msg) {
-        if (getConfig().getBoolean("debug")) {
+        if (FlagsHConfig.debug()) {
             getLogger().info(msg);
         }
     }
     public void debug(Supplier<String> msgSupplier) {
-        if (getConfig().getBoolean("debug")) {
+        if (FlagsHConfig.debug()) {
             getLogger().info(msgSupplier);
         }
     }
