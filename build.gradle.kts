@@ -37,7 +37,7 @@ tasks {
         sequenceOf(
             "co.aikar",
             "org.bstats",
-            "com.fasterxml.jackson.core"
+            "com.fasterxml.jackson"
         ).forEach { pkg ->
             relocate(pkg, "$prefix.$pkg")
         }
