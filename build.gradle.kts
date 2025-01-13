@@ -9,6 +9,10 @@ plugins {
 group="fr.formiko.flagsh"
 version="4.4.1"
 description="Display banners as flags."
+val mainMinecraftVersion = "1.21.4"
+val supportedMinecraftVersions = "1.20 - 1.21.4"
+val townyVersion = "0.101.0.2"
+val jacksonVersion = "2.18.2"
 
 repositories {
     mavenCentral()
@@ -19,12 +23,12 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
-    compileOnly("com.palmergames.bukkit.towny:towny:0.101.0.0")
+    compileOnly("io.papermc.paper:paper-api:$mainMinecraftVersion-R0.1-SNAPSHOT")
+    compileOnly("com.palmergames.bukkit.towny:towny:$townyVersion")
     implementation("org.bstats:bstats-bukkit:3.1.0")
     implementation("co.aikar:acf-paper:0.5.1-SNAPSHOT")
-    implementation("com.fasterxml.jackson.core:jackson-core:2.18.2")
-    implementation("com.fasterxml.jackson.core:jackson-databind:2.18.2")
+    implementation("com.fasterxml.jackson.core:jackson-core:$jacksonVersion")
+    implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
 }
 
 java {
@@ -62,12 +66,12 @@ tasks {
     }
     runServer {
         downloadPlugins {
-            github("TownyAdvanced", "Towny", "0.101.0.2", "towny-0.101.0.2.jar") // we can't use the latest release because it's inside a zip.
+            github("TownyAdvanced", "Towny", "$townyVersion", "towny-$townyVersion.jar") // we can't use the latest release because it's inside a zip.
         }
         // Configure the Minecraft version for our task.
         // This is the only required configuration besides applying the plugin.
         // Your plugin's jar (or shadowJar if present) will be used automatically.
-        minecraftVersion("1.21.4")
+        minecraftVersion(mainMinecraftVersion)
     }
     // runPaper.folia.registerTask()
 }
@@ -75,5 +79,17 @@ tasks {
 publishing {
     publications.create<MavenPublication>("maven") {
         from(components["java"])
+    }
+}
+
+tasks.register("echoVersion") {
+    doLast {
+        println("${project.version}")
+    }
+}
+
+tasks.register("echoReleaseName") {
+    doLast {
+        println("${project.version} [${supportedMinecraftVersions}]")
     }
 }
