@@ -78,9 +78,16 @@ public class Flag implements Serializable {
     public float getSize() { return size; }
     public final boolean isFlag() { return flagNotBanner; }
     public final boolean isBanner() { return !flagNotBanner; }
+    // Paper only method
+    // public @Nullable ItemStack getItemStack() {
+    //     return !itemDisplaysIds.isEmpty() && getWorld() != null
+    //             && getWorld().getEntity(itemDisplaysIds.get(0)) instanceof ItemDisplay itemDisplay ? itemDisplay.getItemStack() : null;
+    // }
+    // Compatible with Spigot method
     public @Nullable ItemStack getItemStack() {
         return !itemDisplaysIds.isEmpty() && getWorld() != null
-                && getWorld().getEntity(itemDisplaysIds.get(0)) instanceof ItemDisplay itemDisplay ? itemDisplay.getItemStack() : null;
+                && getWorld().getEntities().stream().filter(e -> e.getUniqueId().equals(itemDisplaysIds.get(0))).findFirst().orElse(null)
+                    instanceof ItemDisplay itemDisplay ? itemDisplay.getItemStack() : null;
     }
 
 
