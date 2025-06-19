@@ -6,7 +6,7 @@
 [ ![download][] ][downloadLink]
 [ ![discord-shield][] ][discord-invite]
 
-[**Discord**](https://discord.gg/RPNbtRSFqG) | [**Hangar**](https://hangar.papermc.io/Hydrolien/FlagsH) | [**Spigot**](https://www.spigotmc.org/resources/flagsh.113920/) | [**GitHub**](https://github.com/HydrolienF/FlagsH)
+[**Discord**](https://discord.gg/RPNbtRSFqG) | [**Hangar**](https://hangar.papermc.io/Hydrolien/FlagsH) | [**Spigot**](https://www.spigotmc.org/resources/flagsh.113920/) | [**Modrinth**](https://modrinth.com/plugin/flagsh) | [**GitHub**](https://github.com/HydrolienF/FlagsH)
 
 # FlagsH
 Minecraft plugins to display banners as flags.

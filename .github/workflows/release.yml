@@ -45,26 +45,14 @@ jobs:
             touch CHANGELOG.md
           fi
 
-      - name: Remove all lines after the 2nd title in CHANGELOG.md
-        shell: pwsh
+      - name: Read the first lines of CHANGELOG.md from gradle
+        id: changelog
         run: |
-          $changelogPath = "CHANGELOG.md"
-          $content = Get-Content -Path CHANGELOG.md
-          $indices = ($content | ForEach-Object { $_ } | Select-String -Pattern "^#" | ForEach-Object { $_.LineNumber - 1 })
-
-          if ($indices.Count -ge 2) {
-              $startIndex = $indices[0]
-              $endIndex = $indices[1]
-
-              $changes = $content[$startIndex..($endIndex - 1)]
-
-              $changes = $changes | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
-
-              $changes -join "`n" | Set-Content -Path $changelogPath
-              Write-Output "Changelog updated"
-          } else {
-              Write-Output "Not as much lines as expected"
-          }
+          {
+            echo "changelog<<EOF"
+            ./gradlew -q echoLatestVersionChangelog
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
 
       - name: Create Release
         id: createRelease
@@ -76,13 +64,14 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ steps.version.outputs.version }}
           name: ${{ steps.version.outputs.releaseName }}
-          bodyFile: CHANGELOG.md
+          body: ${{ steps.changelog.outputs.changelog }}
           # prerelease: ${{ !startsWith(github.ref, 'refs/tags/') }} #Always release for now
           skipIfReleaseExists: true
       
-      # Does not work for now.
-      # - name: Publish to hangar
-      #   env:
-      #     # Make sure you have added a repository secret in the repository's settings
-      #     HANGAR_API_TOKEN: ${{ secrets.HANGAR_API_TOKEN }}
-      #   run: ./gradlew assemble publishPluginPublicationToHangar --stacktrace
+      - name: Publish to hangar & modrinth
+        env:
+          # Make sure you have added a repository secret in the repository's settings
+          HANGAR_API_TOKEN: ${{ secrets.HANGAR_API_TOKEN }}
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+        run: ./gradlew assemble publishPluginPublicationToHangar
+        # run: ./gradlew assemble publishPluginPublicationToHangar modrinth

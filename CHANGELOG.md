@@ -1,3 +1,6 @@
+# 4.4.2
+Support from 1.20 to 1.21.6.
+
 # 4.4.1
 Fix a missing function in Spiggot API.
 
@@ -55,3 +58,5 @@ Remove banner from player inventory when placing it.
 
 Add admin command.
 Prevent player from interacting with flag in ADVENTURE.
+
+...
