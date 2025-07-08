@@ -18,3 +18,20 @@ offHandMod: DEFAULT
 # List of gamemode in which player can't interact with flags and banners. Usually you only want player in adventure not being able to edit flag, but you might also want to prevent any player in survival to place or destroy banner.
 forbidenInteractGamemodes:
 - ADVENTURE
+
+# Sounds configuration.
+# Each sound can be disabled or lowered in volume. Volume value need to be between 0.0 and 1.0.
+# More sound can be found ingame with the command /playsound. Any sound that you can see in this command can be used here, including datapack sounds.
+sounds:
+  extend:
+    enable: true
+    sound: "minecraft:block.wool.place"
+    volume: 1.0
+  break:
+    enable: true
+    sound: "minecraft:block.wood.break"
+    volume: 1.0
+  forbiden_action:
+    enable: true
+    sound: "minecraft:entity.villager.no"
+    volume: 1.0

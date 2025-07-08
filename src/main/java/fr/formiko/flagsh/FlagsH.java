@@ -1,5 +1,7 @@
 package fr.formiko.flagsh;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.UUID;
 import javax.annotation.Nonnull;
@@ -8,15 +10,12 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class FlagsH {
     public static final List<Material> ALL_BANNERS = List.of(Material.WHITE_BANNER, Material.ORANGE_BANNER, Material.MAGENTA_BANNER,
@@ -113,7 +112,7 @@ public class FlagsH {
             if (bannerPlaced != null) {
                 bannerPlaced.breakNaturally();
             }
-            flag.playSound(Sound.ENTITY_VILLAGER_NO);
+            flag.playSound("forbiden_action");
         } else {
             if (removeBannerItemFromPlayer(playerToRemoveItemFrom)) {
                 flag.extend((float) Math.min(flag.getSize() + FlagsHConfig.increasingSizeStep(), FlagsHConfig.maxFlagSize()));

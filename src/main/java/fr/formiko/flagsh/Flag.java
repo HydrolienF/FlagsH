@@ -238,7 +238,7 @@ public class Flag implements Serializable {
         removeEntities();
         size = newSize;
         create(itemStack);
-        playSound(Sound.BLOCK_WOOL_PLACE);
+        playSound("extend");
     }
 
     /**
@@ -264,7 +264,7 @@ public class Flag implements Serializable {
             if (!removed) {
                 FlagsH.getPlugin().getLogger().warning("Flag.remove(): flag not removed from the list of flags. flag: " + this);
             }
-            playSound(Sound.BLOCK_WOOD_BREAK);
+            playSound("break");
         }
     }
 
@@ -314,8 +314,17 @@ public class Flag implements Serializable {
      * 
      * @param sound sound to play
      */
-    public void playSound(@Nonnull Sound sound) {
-        getWorld().playSound(new Location(getWorld(), x, y, z), sound, SoundCategory.BLOCKS, 1, 0);
+    public void playSound(@Nonnull String soundKey) {
+        FlagsHPlugin.getInstance().debug("Flag.playSound(): soundKey: " + soundKey);
+        if(FlagsHConfig.shouldPlaySound(soundKey)){
+            Sound sound = FlagsHConfig.sound(soundKey);
+            if(sound == null) {
+                FlagsHPlugin.getInstance().getLogger().warning("Flag.playSound(): sound is null. soundKey: " + soundKey+". Check your config file.");
+            } else {
+                FlagsHPlugin.getInstance().debug(() -> "Flag.playSound(): sound: " + sound + " volume " + FlagsHConfig.soundVolume(soundKey));
+                getWorld().playSound(new Location(getWorld(), x, y, z), sound, SoundCategory.BLOCKS, FlagsHConfig.soundVolume(soundKey), 0);
+            }
+        }
     }
 
     /** Create an interaction at the given location. */

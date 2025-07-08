@@ -2,6 +2,8 @@ package fr.formiko.flagsh;
 
 import java.util.List;
 import org.bukkit.GameMode;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Sound;
 
 public class FlagsHConfig {
     enum OffHandMod {
@@ -56,5 +58,29 @@ public class FlagsHConfig {
     public static OffHandMod offHandMod() { return offHandMod; }
 
     public static boolean isForbidenInteractGamemodes(GameMode gameMode) { return gameModes.contains(gameMode); }
+
+    public static Sound sound(String soundKey) {
+        FlagsHPlugin.getInstance().debug(() -> "Flag.playSound() of "+"sounds." + soundKey + ".sound"+": soundName: " + FlagsHPlugin.getInstance().getConfig().getString("sounds." + soundKey + ".sound"));
+        String soundName = FlagsHPlugin.getInstance().getConfig().getString("sounds." + soundKey + ".sound");
+        if(soundName == null) {
+            soundName = switch(soundKey) {
+                case "extend" -> "minecraft:block.wool.place";
+                case "break" -> "minecraft:block.wood.break";
+                case "forbiden_action" -> "minecraft:entity.villager.no";
+                default -> "minecraft:block.wool.place";
+            };
+        }
+        String [] t = soundName.split(":");
+        NamespacedKey soundNa = new NamespacedKey(t[0], t[1]);
+        return io.papermc.paper.registry.RegistryAccess.registryAccess().getRegistry(io.papermc.paper.registry.RegistryKey.SOUND_EVENT).get(soundNa);
+    }
+
+    public static boolean shouldPlaySound(String soundKey) {
+        return FlagsHPlugin.getInstance().getConfig().getBoolean("sounds." + soundKey + ".enable", true);
+    }
+
+    public static float soundVolume(String soundKey) {
+        return (float) FlagsHPlugin.getInstance().getConfig().getDouble("sounds." + soundKey + ".volume", 1.0f);
+    }
 
 }
