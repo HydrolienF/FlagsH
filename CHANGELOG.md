@@ -1,4 +1,8 @@
-# 4.4.3
+# 4.4.6
+Fix support for older than 1.20.6 version.
+/!\ This version won't have update when 1.22 will be out.
+
+# 4.4.5
 Make sound configurable.
 Support from 1.20 to 1.21.7.
 

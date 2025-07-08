@@ -72,7 +72,20 @@ public class FlagsHConfig {
         }
         String [] t = soundName.split(":");
         NamespacedKey soundNa = new NamespacedKey(t[0], t[1]);
-        return io.papermc.paper.registry.RegistryAccess.registryAccess().getRegistry(io.papermc.paper.registry.RegistryKey.SOUND_EVENT).get(soundNa);
+        // return io.papermc.paper.registry.RegistryAccess.registryAccess().getRegistry(io.papermc.paper.registry.RegistryKey.SOUND_EVENT).get(soundNa);
+
+        // If minecraft version is >= 1.20.6, use io.papermc.paper.registry.RegistryAccess
+        // TODO drop support for version below 1.20.6 when 1.22 will be out and Sound.valueOf no longer exists.
+        try {
+            Class<?> klassRegistryAccess = Class.forName("io.papermc.paper.registry.RegistryAccess");
+            Class<?> klassRegistryKey = Class.forName("io.papermc.paper.registry.RegistryKey");
+            Object registryKey = klassRegistryKey.getField("SOUND_EVENT").get(null);
+            Object registryAccess = klassRegistryAccess.getMethod("registryAccess").invoke(null);
+            Object registry = registryAccess.getClass().getMethod("getRegistry", klassRegistryKey).invoke(registryAccess, registryKey);
+            return (Sound) registry.getClass().getMethod("get", NamespacedKey.class).invoke(registry, soundNa);
+        } catch (Exception e) {
+            return Sound.valueOf(soundName);
+        }
     }
 
     public static boolean shouldPlaySound(String soundKey) {
