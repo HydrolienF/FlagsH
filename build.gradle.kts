@@ -9,7 +9,7 @@ plugins {
 }
 
 group="fr.formiko.flagsh"
-version="4.4.8"
+version="4.4.9"
 description="Display banners as flags."
 val mainMinecraftVersion = "1.21.7"
 val supportedMinecraftVersions = "1.20 - 1.21.7"
@@ -215,7 +215,7 @@ tasks.register("echoSupportedMinecraftVersions") {
 
 modrinth {
     token.set(System.getenv("MODRINTH_TOKEN")) // Remember to have the MODRINTH_TOKEN environment variable set or else this will fail - just make sure it stays private!
-    projectId.set("bomemeallimiter") // This can be the project ID or the slug. Either will work!
+    projectId.set("${project.name.toLowerCase()}") // This can be the project ID or the slug. Either will work!
     versionNumber.set("${project.version}") // You don't need to set this manually. Will fail if Modrinth has this version already
     versionType.set("release") // This is the default -- can also be `beta` or `alpha`
     uploadFile.set(layout.buildDirectory.dir("libs").get().asFile.absolutePath + "/${project.name}-${project.version}.jar")
