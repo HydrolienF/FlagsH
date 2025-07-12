@@ -1,3 +1,6 @@
+# 4.4.8
+Fix hangar link
+
 # 4.4.6
 Fix support for older than 1.20.6 version.
 /!\ This version won't have update when 1.22 will be out.

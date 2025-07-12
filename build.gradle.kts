@@ -9,7 +9,7 @@ plugins {
 }
 
 group="fr.formiko.flagsh"
-version="4.4.7"
+version="4.4.8"
 description="Display banners as flags."
 val mainMinecraftVersion = "1.21.7"
 val supportedMinecraftVersions = "1.20 - 1.21.7"
@@ -173,7 +173,7 @@ hangarPublish { // ./gradlew publishPluginPublicationToHangar
         )
         platforms {
             register(io.papermc.hangarpublishplugin.model.Platforms.PAPER) {
-                url = "https://github.com/Mvndi/"+project.name+"/releases/download/"+versionString+"/"+project.name+"-"+versionString+".jar"
+                url = "https://github.com/HydrolienF/"+project.name+"/releases/download/"+versionString+"/"+project.name+"-"+versionString+".jar"
 
                 // Set platform versions from gradle.properties file
                 val versions: List<String> = supportedMinecraftVersions.replace(" ", "").split(",")
