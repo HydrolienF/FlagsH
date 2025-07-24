@@ -9,10 +9,10 @@ plugins {
 }
 
 group="fr.formiko.flagsh"
-version="4.4.9"
+version="4.4.10"
 description="Display banners as flags."
-val mainMinecraftVersion = "1.21.7"
-val supportedMinecraftVersions = "1.20 - 1.21.7"
+val mainMinecraftVersion = "1.21.8"
+val supportedMinecraftVersions = "1.20 - 1.21.8"
 val townyVersion = "0.101.0.2"
 val jacksonVersion = "2.18.2"
 
@@ -185,7 +185,7 @@ hangarPublish { // ./gradlew publishPluginPublicationToHangar
 
 // Do an array of game versions from supportedMinecraftVersions
 fun expandMinecraftVersions(range: String): List<String> {
-    val latestPatches = mapOf("1.20" to 6, "1.21" to 7)
+    val latestPatches = mapOf("1.20" to 6, "1.21" to 8)
 
     fun String.toMinorAndPatch() = split('.').let {
         if (it.size == 2) it.joinToString(".") to 0 else "${it[0]}.${it[1]}" to it[2].toInt()
