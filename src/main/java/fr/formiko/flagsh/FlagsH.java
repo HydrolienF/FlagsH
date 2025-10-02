@@ -2,6 +2,7 @@ package fr.formiko.flagsh;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import javax.annotation.Nonnull;
@@ -30,13 +31,7 @@ public class FlagsH {
     public static final List<Material> ALL_FENCES = List.of(Material.ACACIA_FENCE, Material.BAMBOO_FENCE, Material.BIRCH_FENCE,
             Material.CHERRY_FENCE, Material.CRIMSON_FENCE, Material.DARK_OAK_FENCE, Material.JUNGLE_FENCE, Material.OAK_FENCE,
             Material.SPRUCE_FENCE, Material.MANGROVE_FENCE, Material.NETHER_BRICK_FENCE, Material.WARPED_FENCE);
-    public static final List<Material> ALL_GLACE_PANES = List.of(Material.GLASS_PANE, Material.BLACK_STAINED_GLASS_PANE,
-            Material.BLUE_STAINED_GLASS_PANE, Material.BROWN_STAINED_GLASS_PANE, Material.CYAN_STAINED_GLASS_PANE,
-            Material.GRAY_STAINED_GLASS_PANE, Material.GREEN_STAINED_GLASS_PANE, Material.LIGHT_BLUE_STAINED_GLASS_PANE,
-            Material.LIGHT_GRAY_STAINED_GLASS_PANE, Material.LIME_STAINED_GLASS_PANE, Material.MAGENTA_STAINED_GLASS_PANE,
-            Material.ORANGE_STAINED_GLASS_PANE, Material.PINK_STAINED_GLASS_PANE, Material.PURPLE_STAINED_GLASS_PANE,
-            Material.RED_STAINED_GLASS_PANE, Material.WHITE_STAINED_GLASS_PANE, Material.YELLOW_STAINED_GLASS_PANE, Material.IRON_BARS,
-            Material.CHAIN, Material.BAMBOO, Material.LIGHTNING_ROD);
+    public static final List<Material> ALL_GLACE_PANES = chains();
     public static final List<Material> ALL_WALLS = List.of(Material.BLACKSTONE_WALL, Material.BRICK_WALL, Material.COBBLESTONE_WALL,
             Material.ANDESITE_WALL, Material.DEEPSLATE_BRICK_WALL, Material.DEEPSLATE_TILE_WALL, Material.DIORITE_WALL,
             Material.GRANITE_WALL, Material.NETHER_BRICK_WALL, Material.STONE_BRICK_WALL, Material.POLISHED_BLACKSTONE_BRICK_WALL,
@@ -48,19 +43,55 @@ public class FlagsH {
 
     private FlagsH() {}
 
+    private static List<Material> chains() {
+        List<Material> list = new ArrayList<>();
+
+        // common materials (all versions)
+        list.addAll(List.of(Material.GLASS_PANE, Material.BLACK_STAINED_GLASS_PANE, Material.BLUE_STAINED_GLASS_PANE,
+                Material.BROWN_STAINED_GLASS_PANE, Material.CYAN_STAINED_GLASS_PANE, Material.GRAY_STAINED_GLASS_PANE,
+                Material.GREEN_STAINED_GLASS_PANE, Material.LIGHT_BLUE_STAINED_GLASS_PANE, Material.LIGHT_GRAY_STAINED_GLASS_PANE,
+                Material.LIME_STAINED_GLASS_PANE, Material.MAGENTA_STAINED_GLASS_PANE, Material.ORANGE_STAINED_GLASS_PANE,
+                Material.PINK_STAINED_GLASS_PANE, Material.PURPLE_STAINED_GLASS_PANE, Material.RED_STAINED_GLASS_PANE,
+                Material.WHITE_STAINED_GLASS_PANE, Material.YELLOW_STAINED_GLASS_PANE, Material.IRON_BARS, Material.BAMBOO,
+                Material.LIGHTNING_ROD));
+
+        // add old chain if present (<=1.21.8)
+        addIfPresent(list, "CHAIN");
+
+        // add new chains if present (>=1.21.9)
+        addIfPresent(list, "IRON_CHAIN");
+        addIfPresent(list, "COPPER_CHAIN");
+        addIfPresent(list, "EXPOSED_COPPER_CHAIN");
+        addIfPresent(list, "OXIDIZED_COPPER_CHAIN");
+        addIfPresent(list, "WAXED_COPPER_CHAIN");
+        addIfPresent(list, "WAXED_EXPOSED_COPPER_CHAIN");
+        addIfPresent(list, "WAXED_OXIDIZED_COPPER_CHAIN");
+        addIfPresent(list, "WAXED_WEATHERED_COPPER_CHAIN");
+        addIfPresent(list, "WEATHERED_COPPER_CHAIN");
+
+        return list;
+    }
+
+    private static void addIfPresent(List<Material> list, String name) {
+        try {
+            Material mat = Material.valueOf(name);
+            list.add(mat);
+        } catch (IllegalArgumentException ignored) {
+            // Material does not exist in this version
+        }
+    }
+
 
     // create ---------------------------------------------------------------------------------------------------------
 
     public static @Nonnull FlagsHPlugin getPlugin() { return FlagsHPlugin.getInstance(); }
     public static @Nonnull ObjectMapper getObjectMapper() {
-        if(objectMapper == null) {
+        if (objectMapper == null) {
             objectMapper = new ObjectMapper();
-            objectMapper.setVisibility(objectMapper.getSerializationConfig().getDefaultVisibilityChecker()
-                .withFieldVisibility(JsonAutoDetect.Visibility.ANY)
-                .withGetterVisibility(JsonAutoDetect.Visibility.NONE)
-                .withSetterVisibility(JsonAutoDetect.Visibility.NONE)
-                .withCreatorVisibility(JsonAutoDetect.Visibility.NONE)
-                .withIsGetterVisibility(JsonAutoDetect.Visibility.NONE));
+            objectMapper.setVisibility(
+                    objectMapper.getSerializationConfig().getDefaultVisibilityChecker().withFieldVisibility(JsonAutoDetect.Visibility.ANY)
+                            .withGetterVisibility(JsonAutoDetect.Visibility.NONE).withSetterVisibility(JsonAutoDetect.Visibility.NONE)
+                            .withCreatorVisibility(JsonAutoDetect.Visibility.NONE).withIsGetterVisibility(JsonAutoDetect.Visibility.NONE));
         }
         return objectMapper;
     }
@@ -177,7 +208,7 @@ public class FlagsH {
     }
     /** Get a flag from it's interaction. */
     public static @Nullable Flag getFlagLinkedToEntity(@Nonnull Entity entity) {
-        if(entity.getPersistentDataContainer().has(getFlagDataNamespacedKey(), PersistentDataType.STRING)){
+        if (entity.getPersistentDataContainer().has(getFlagDataNamespacedKey(), PersistentDataType.STRING)) {
             String json = entity.getPersistentDataContainer().get(getFlagDataNamespacedKey(), PersistentDataType.STRING);
             FlagsHPlugin.getInstance().debug(() -> "Flag data found on entity " + entity.getUniqueId() + " : " + json);
             return Flag.fromJson(json);
@@ -186,8 +217,6 @@ public class FlagsH {
         return getFlagLinkedToEntity(entity.getUniqueId());
     }
 
-    public static NamespacedKey getFlagDataNamespacedKey() {
-        return new NamespacedKey(FlagsH.getPlugin(), FLAG_DATA_KEY);
-    }
+    public static NamespacedKey getFlagDataNamespacedKey() { return new NamespacedKey(FlagsH.getPlugin(), FLAG_DATA_KEY); }
 
 }
