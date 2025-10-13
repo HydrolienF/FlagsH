@@ -1,3 +1,6 @@
+# 4.4.12
+Support from 1.20 to 1.21.10.
+
 # 4.4.11
 Support from 1.20 to 1.21.9.
 Flags will be correcly place on copper chains.
