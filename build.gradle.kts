@@ -9,10 +9,10 @@ plugins {
 }
 
 group="fr.formiko.flagsh"
-version="4.4.12"
+version="4.4.13"
 description="Display banners as flags."
-val mainMinecraftVersion = "1.21.10"
-val supportedMinecraftVersions = "1.20 - 1.21.10"
+val mainMinecraftVersion = "1.21.11"
+val supportedMinecraftVersions = "1.20 - 1.21.11"
 val townyVersion = "0.101.0.2"
 val jacksonVersion = "2.18.2"
 
