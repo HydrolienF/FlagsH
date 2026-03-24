@@ -3,6 +3,7 @@ package fr.formiko.flagsh;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import javax.annotation.Nonnull;
@@ -31,7 +32,7 @@ public class FlagsH {
     public static final List<Material> ALL_FENCES = List.of(Material.ACACIA_FENCE, Material.BAMBOO_FENCE, Material.BIRCH_FENCE,
             Material.CHERRY_FENCE, Material.CRIMSON_FENCE, Material.DARK_OAK_FENCE, Material.JUNGLE_FENCE, Material.OAK_FENCE,
             Material.SPRUCE_FENCE, Material.MANGROVE_FENCE, Material.NETHER_BRICK_FENCE, Material.WARPED_FENCE);
-    public static final List<Material> ALL_GLACE_PANES = chains();
+    public static final List<Material> ALL_GLACE_PANES = Collections.unmodifiableList(chains());
     public static final List<Material> ALL_WALLS = List.of(Material.BLACKSTONE_WALL, Material.BRICK_WALL, Material.COBBLESTONE_WALL,
             Material.ANDESITE_WALL, Material.DEEPSLATE_BRICK_WALL, Material.DEEPSLATE_TILE_WALL, Material.DIORITE_WALL,
             Material.GRANITE_WALL, Material.NETHER_BRICK_WALL, Material.STONE_BRICK_WALL, Material.POLISHED_BLACKSTONE_BRICK_WALL,
