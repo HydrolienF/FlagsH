@@ -3,7 +3,7 @@ plugins {
     id("io.github.goooler.shadow") version "8.1.8"
     `maven-publish` // Add ./gradlew publishToMavenLocal
     id("xyz.jpenilla.run-paper") version "2.3.1"
-    id("org.sonarqube") version "5.0.0.4638"
+    id("org.sonarqube") version "7.2.2.6593" // Advanced code quality checks
     id("io.papermc.hangar-publish-plugin") version "0.1.3"
     id("com.modrinth.minotaur") version "2.+" // cf https://github.com/modrinth/minotaur
 }
@@ -35,6 +35,14 @@ dependencies {
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+}
+
+sonar {
+  properties {
+    property("sonar.projectKey", "Mvndi_MvndiSeasons_63ec75ae-a964-4918-8e52-b671da94bdea")
+    property("sonar.projectName", project.name)
+    property("sonar.host.url", "https://mvndisonar.formiko.fr")
+  }
 }
 
 tasks {
