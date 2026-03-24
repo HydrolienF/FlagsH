@@ -40,7 +40,7 @@ public class FlagsH {
             Material.RED_SANDSTONE_WALL, Material.SANDSTONE_WALL, Material.MOSSY_COBBLESTONE_WALL, Material.MOSSY_STONE_BRICK_WALL,
             Material.END_STONE_BRICK_WALL, Material.COBBLED_DEEPSLATE_WALL, Material.MUD_BRICK_WALL);
     private static ObjectMapper objectMapper;
-    public static String FLAG_DATA_KEY = "flagsh_data";
+    public static final String FLAG_DATA_KEY = "flagsh_data";
 
     private FlagsH() {}
 
