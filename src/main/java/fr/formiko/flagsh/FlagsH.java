@@ -211,7 +211,11 @@ public class FlagsH {
         if (entity.getPersistentDataContainer().has(getFlagDataNamespacedKey(), PersistentDataType.STRING)) {
             String json = entity.getPersistentDataContainer().get(getFlagDataNamespacedKey(), PersistentDataType.STRING);
             FlagsHPlugin.getInstance().debug(() -> "Flag data found on entity " + entity.getUniqueId() + " : " + json);
-            return Flag.fromJson(json);
+            if (json == null) {
+                return null;
+            } else {
+                return Flag.fromJson(json);
+            }
         }
 
         return getFlagLinkedToEntity(entity.getUniqueId());
