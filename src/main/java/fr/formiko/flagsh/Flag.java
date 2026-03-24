@@ -253,7 +253,7 @@ public class Flag implements Serializable {
             removeEntities();
             boolean removed = FlagsH.getPlugin().getFlags().remove(this);
             if (!removed) {
-                FlagsH.getPlugin().getLogger().warning("Flag.remove(): flag not removed from the list of flags. flag: " + this);
+                FlagsH.getPlugin().getLogger().warning(() -> "Flag.remove(): flag not removed from the list of flags. flag: " + this);
             }
         } else {
             ItemStack item = itemStack.clone();
@@ -262,7 +262,7 @@ public class Flag implements Serializable {
             removeEntities();
             boolean removed = FlagsH.getPlugin().getFlags().remove(this);
             if (!removed) {
-                FlagsH.getPlugin().getLogger().warning("Flag.remove(): flag not removed from the list of flags. flag: " + this);
+                FlagsH.getPlugin().getLogger().warning(() -> "Flag.remove(): flag not removed from the list of flags. flag: " + this);
             }
             playSound("break");
         }
