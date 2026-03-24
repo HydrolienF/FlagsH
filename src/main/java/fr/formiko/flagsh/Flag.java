@@ -388,6 +388,11 @@ public class Flag implements Serializable {
         return false;
     }
 
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
+
     public static @Nonnull Flag fromJson(@Nonnull String json) {
         try {
             return FlagsH.getObjectMapper().readValue(json, Flag.class);
