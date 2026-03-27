@@ -1,3 +1,6 @@
+# 4.5.1
+Allow banner to be placed as vanilla banner or on switchable blocks with off hand mod VANILLA_AND_INVERTED. This is the new default mod as it offer more possibility.
+
 # 4.5.0
 Add a debug command `/fh forceRemoveNear` to kill near by flags entities if the flags can't be removed.
 

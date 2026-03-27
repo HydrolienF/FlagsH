@@ -7,7 +7,7 @@ import org.bukkit.Sound;
 
 public class FlagsHConfig {
     enum OffHandMod {
-        DEFAULT, VANILLA, INVERTED
+        DEFAULT, VANILLA, INVERTED, VANILLA_AND_INVERTED
     }
     private static OffHandMod offHandMod;
     private static List<GameMode> gameModes;

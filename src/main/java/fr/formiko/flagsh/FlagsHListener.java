@@ -69,6 +69,12 @@ public class FlagsHListener implements Listener {
                 return false;
             } else if (FlagsHConfig.OffHandMod.INVERTED.equals(FlagsHConfig.offHandMod())) {
                 flagNotBanner = !flagNotBanner;
+            } else if (FlagsHConfig.OffHandMod.VANILLA_AND_INVERTED.equals(FlagsHConfig.offHandMod())) {
+                if (!flagNotBanner) {
+                    FlagsHPlugin.getInstance().debug("Off hand mod is VANILLA_AND_INVERTED, canceling flag creation");
+                    return false;
+                }
+                flagNotBanner = !flagNotBanner;
             }
         }
 

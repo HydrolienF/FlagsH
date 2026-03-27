@@ -13,7 +13,8 @@ increasingSizeStep: 0.5
 # - "DEFAULT": No difference with main hand.
 # - "VANILLA": Off hand only place vanilla banners. (Allow vanilla banner to be placed.)
 # - "INVERTED": Off hand place banner in sneaking mode instead of flags. (Allow banner to be placed on switchable blocks.)
-offHandMod: DEFAULT
+# - "VANILLA_AND_INVERTED": Off hand place banner in sneaking mode and vanilla banner while not sneaking.
+offHandMod: VANILLA_AND_INVERTED
 
 # List of gamemode in which player can't interact with flags and banners. Usually you only want player in adventure not being able to edit flag, but you might also want to prevent any player in survival to place or destroy banner.
 forbidenInteractGamemodes:
