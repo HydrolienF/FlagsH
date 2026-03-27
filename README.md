@@ -64,6 +64,7 @@ Each new banner added extend the flag of `increasingSizeStep`.
 - "DEFAULT": No difference with main hand.
 - "VANILLA": Off hand only place vanilla banners. (Allow vanilla banner to be placed.)
 - "INVERTED": Off hand place banner in sneaking mode instead of flags. (Allow banner to be placed on switchable blocks.)
+- "VANILLA_AND_INVERTED": Off hand place banner in sneaking mode and vanilla banner while not sneaking.
 
 
 ## Statistics
