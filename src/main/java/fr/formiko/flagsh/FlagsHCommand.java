@@ -1,9 +1,5 @@
 package fr.formiko.flagsh;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.annotation.Nonnull;
-import org.bukkit.command.CommandSender;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandCompletion;
@@ -11,7 +7,12 @@ import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Description;
 import co.aikar.commands.annotation.Subcommand;
+import java.util.ArrayList;
+import java.util.List;
+import javax.annotation.Nonnull;
 import net.kyori.adventure.text.Component;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 @CommandAlias("flagsh|fh")
 public class FlagsHCommand extends BaseCommand {
@@ -46,7 +47,7 @@ public class FlagsHCommand extends BaseCommand {
     }
 
     @Subcommand("remove")
-    @CommandCompletion("@flagshId")
+    @CommandCompletion("@flagshId @empty")
     @Description("Remove a flag or all flags")
     @CommandPermission(ADMIN_PERMISSION)
     public static void onRemove(CommandSender commandSender, @Nonnull String arg) {
@@ -72,4 +73,23 @@ public class FlagsHCommand extends BaseCommand {
             }
         }
     }
+
+
+    @Subcommand("forceRemoveNear")
+    @CommandAlias("fhfrn")
+    @Description("Force remove near by flags")
+    @CommandPermission(ADMIN_PERMISSION)
+    public static void onForceRemoveNear(CommandSender commandSender, int radius) {
+        if (commandSender instanceof Player player) {
+            FlagsH.killNearByEntities(player, radius);
+        } else {
+            commandSender.sendMessage(Component.text("You must be a player to use this command"));
+        }
+    }
+
+    @Subcommand("forceRemoveNear")
+    @CommandAlias("fhfrn")
+    @Description("Force remove near by flags")
+    @CommandPermission(ADMIN_PERMISSION)
+    public static void onForceRemoveNear(CommandSender commandSender) { onForceRemoveNear(commandSender, 3); }
 }

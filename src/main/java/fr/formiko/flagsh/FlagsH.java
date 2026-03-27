@@ -15,6 +15,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
@@ -223,5 +224,15 @@ public class FlagsH {
     }
 
     public static NamespacedKey getFlagDataNamespacedKey() { return new NamespacedKey(FlagsH.getPlugin(), FLAG_DATA_KEY); }
+
+
+    public static void killNearByEntities(Player player, int radius) {
+        int distance = radius * 2;
+        for (Entity entity : player.getNearbyEntities(distance, distance, distance)) {
+            if (entity.getType() == EntityType.INTERACTION || entity.getType() == EntityType.ITEM_DISPLAY) {
+                entity.remove();
+            }
+        }
+    }
 
 }

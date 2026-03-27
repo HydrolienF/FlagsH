@@ -1,3 +1,6 @@
+# 4.5.0
+Add a debug command `/fh forceRemoveNear` to kill near by flags entities if the flags can't be removed.
+
 # 4.4.13
 Support from 1.20 to 1.21.11.
 
