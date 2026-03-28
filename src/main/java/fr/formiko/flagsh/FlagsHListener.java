@@ -6,7 +6,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -49,9 +48,6 @@ public class FlagsHListener implements Listener {
             }
         }
     }
-
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onDamagePrint(EntityDamageByEntityEvent event) { FlagsHPlugin.getInstance().getLogger().warning("EntityDamageEvent: " + event.getEntity() + " damaged by " + event.getCause() + " did " + event.getDamage() + " damage"); }
 
     /**
      * Create a new flag or banner depending on the player sneaking status and the plugin configuration.
