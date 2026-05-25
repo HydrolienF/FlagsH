@@ -1,3 +1,6 @@
+# 4.5.2
+Support from 1.20 to 26.1.2
+
 # 4.5.1
 Allow banner to be placed as vanilla banner or on switchable blocks with off hand mod VANILLA_AND_INVERTED. This is the new default mod as it offer more possibility.
 
