@@ -9,12 +9,12 @@ plugins {
 }
 
 group="fr.formiko.flagsh"
-version="4.5.3"
+version="4.5.4"
 description="Display banners as flags."
 val mainMinecraftVersion = "1.21.11" // 26.1.2
-val supportedMinecraftVersions = "1.20 - 26.1.2"
+val supportedMinecraftVersions = "1.20 - 26.2"
 val townyVersion = "0.103.0.0"
-val jacksonVersion = "2.18.2"
+val jacksonVersion = "2.22.1"
 
 repositories {
     mavenCentral()
@@ -199,7 +199,8 @@ fun expandMinecraftVersions(range: String): List<String> {
     val latestPatches = linkedMapOf(
         "1.20" to 6,
         "1.21" to 11,
-        "26.1" to 2
+        "26.1" to 2,
+        "26.2" to 0
     )
 
     data class Version(
