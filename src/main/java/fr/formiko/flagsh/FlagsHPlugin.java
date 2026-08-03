@@ -9,18 +9,18 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
-import javax.annotation.Nonnull;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
+import org.jetbrains.annotations.NotNull;
 import co.aikar.commands.PaperCommandManager;
 
 public class FlagsHPlugin extends JavaPlugin {
     private List<Flag> flags;
 
-    public @Nonnull List<Flag> getFlags() { return flags; }
-    private @Nonnull File getDataFile() { return new File(getDataFolder(), "flags.data"); }
+    public @NotNull List<Flag> getFlags() { return flags; }
+    private @NotNull File getDataFile() { return new File(getDataFolder(), "flags.data"); }
 
     @Override
     public void onEnable() {

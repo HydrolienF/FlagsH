@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
@@ -17,6 +15,8 @@ import org.bukkit.entity.Interaction;
 import org.bukkit.entity.ItemDisplay;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 
 public class Flag implements Serializable {
@@ -46,7 +46,7 @@ public class Flag implements Serializable {
      * @param yaw                yaw of the flag
      * @param offsetToFitTheWall offset to place flag against the wall
      */
-    public Flag(int x, int y, int z, @Nonnull UUID worldId, boolean flagNotBanner, int yaw, float offsetToFitTheWall) {
+    public Flag(int x, int y, int z, @NotNull UUID worldId, boolean flagNotBanner, int yaw, float offsetToFitTheWall) {
         this.id = UUID.randomUUID();
         this.x = x;
         this.y = y;
@@ -59,21 +59,21 @@ public class Flag implements Serializable {
         this.itemDisplaysIds = new ArrayList<>();
         this.interactionsIds = new ArrayList<>();
     }
-    public Flag(@Nonnull Block block, boolean flagNotBanner, @Nonnull Block behind) {
+    public Flag(@NotNull Block block, boolean flagNotBanner, @NotNull Block behind) {
         this(block.getX(), block.getY(), block.getZ(), block.getWorld().getUID(), flagNotBanner,
                 getYawFromBehindAndBannerBlocks(block, behind), FlagsH.getOffsetToHitWall(behind.getType()) + (flagNotBanner ? 0f : 0.3f));
     }
     // Only for jackson
     private Flag() {}
 
-    public @Nonnull List<UUID> getItemDisplaysIds() { return itemDisplaysIds; }
-    public @Nonnull List<UUID> getInteractionsIds() { return interactionsIds; }
+    public @NotNull List<UUID> getItemDisplaysIds() { return itemDisplaysIds; }
+    public @NotNull List<UUID> getInteractionsIds() { return interactionsIds; }
     public final int getX() { return x; }
     public final int getY() { return y; }
     public final int getZ() { return z; }
     public final int getYaw() { return yaw; }
     public final Location getLocation() { return new Location(getWorld(), getX(), getY(), getZ()); }
-    public final @Nonnull UUID getWorldId() { return worldId; }
+    public final @NotNull UUID getWorldId() { return worldId; }
     public final @Nullable World getWorld() { return FlagsH.getPlugin().getServer().getWorld(worldId); }
     public float getSize() { return size; }
     public final boolean isFlag() { return flagNotBanner; }
@@ -96,7 +96,7 @@ public class Flag implements Serializable {
      * 
      * @param itemStack item which texture will be used
      */
-    public void create(@Nonnull ItemStack itemStack) {
+    public void create(@NotNull ItemStack itemStack) {
         float offsetToHitTheWall = offsetToFitTheWall - ((isFlag() ? 0.335f : 0.05f) * (size - 1f));
         boolean offsetToHitTheWallInX = false;
         if (yaw == 0) {
@@ -132,7 +132,7 @@ public class Flag implements Serializable {
         return Stream.concat(itemDisplaysIds.stream(), interactionsIds.stream()).map(FlagsH.getPlugin().getServer()::getEntity);
     }
 
-    private void addItemDisplayForFlag(@Nonnull ItemStack itemStack, float offsetToHitTheWall, boolean offsetToHitTheWallInX) {
+    private void addItemDisplayForFlag(@NotNull ItemStack itemStack, float offsetToHitTheWall, boolean offsetToHitTheWallInX) {
         float offsetX = 0;
         float offsetZ = 0;
         float offsetToMergeTextureTogether = 0.01f * size;
@@ -276,7 +276,7 @@ public class Flag implements Serializable {
      * @param behind block behind the banner
      * @return
      */
-    private static int getYawFromBehindAndBannerBlocks(@Nonnull Block banner, @Nonnull Block behind) {
+    private static int getYawFromBehindAndBannerBlocks(@NotNull Block banner, @NotNull Block behind) {
         if (behind.getX() > banner.getX()) {
             return 0;
         } else if (behind.getX() < banner.getX()) {
@@ -314,7 +314,7 @@ public class Flag implements Serializable {
      * 
      * @param sound sound to play
      */
-    public void playSound(@Nonnull String soundKey) {
+    public void playSound(@NotNull String soundKey) {
         FlagsHPlugin.getInstance().debug("Flag.playSound(): soundKey: " + soundKey);
         if(FlagsHConfig.shouldPlaySound(soundKey)){
             Sound sound = FlagsHConfig.sound(soundKey);
@@ -328,7 +328,7 @@ public class Flag implements Serializable {
     }
 
     /** Create an interaction at the given location. */
-    private static Interaction createInteraction(@Nonnull Location location, float width, float height) {
+    private static Interaction createInteraction(@NotNull Location location, float width, float height) {
         Interaction interaction = location.getWorld().spawn(location, Interaction.class);
         interaction.setInteractionWidth(width);
         interaction.setInteractionHeight(height);
@@ -337,7 +337,7 @@ public class Flag implements Serializable {
         return interaction;
     }
     /** Create item display, rotate it and place it where the banner is. */
-    private @Nonnull ItemDisplay createBannerDisplay(@Nonnull ItemStack itemStack, @Nonnull Location location, float yaw, boolean isFirst,
+    private @NotNull ItemDisplay createBannerDisplay(@NotNull ItemStack itemStack, @NotNull Location location, float yaw, boolean isFirst,
             float size) {
         // BlockDisplay don't work with banners
         ItemDisplay itemDisplay = getWorld().spawn(location, ItemDisplay.class);
@@ -375,7 +375,7 @@ public class Flag implements Serializable {
     }
 
     @Override
-    public @Nonnull String toString() { return (flagNotBanner ? "Flag" : "Banner") + " (" + x + ", " + y + ", " + z + ") size: " + size; }
+    public @NotNull String toString() { return (flagNotBanner ? "Flag" : "Banner") + " (" + x + ", " + y + ", " + z + ") size: " + size; }
 
     @Override
     public boolean equals(Object obj) {
@@ -393,14 +393,14 @@ public class Flag implements Serializable {
         return id != null ? id.hashCode() : 0;
     }
 
-    public static @Nonnull Flag fromJson(@Nonnull String json) {
+    public static @NotNull Flag fromJson(@NotNull String json) {
         try {
             return FlagsH.getObjectMapper().readValue(json, Flag.class);
         } catch (Exception e) {
             throw new IllegalArgumentException("Flag.fromJson(): " + e.getMessage());
         }
     }
-    public @Nonnull String toJson() {
+    public @NotNull String toJson() {
         try {
             return FlagsH.getObjectMapper().writeValueAsString(this);
         } catch (Exception e) {

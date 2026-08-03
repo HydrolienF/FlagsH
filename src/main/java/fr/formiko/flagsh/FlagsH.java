@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -19,6 +17,8 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class FlagsH {
     public static final List<Material> ALL_BANNERS = List.of(Material.WHITE_BANNER, Material.ORANGE_BANNER, Material.MAGENTA_BANNER,
@@ -86,8 +86,8 @@ public class FlagsH {
 
     // create ---------------------------------------------------------------------------------------------------------
 
-    public static @Nonnull FlagsHPlugin getPlugin() { return FlagsHPlugin.getInstance(); }
-    public static @Nonnull ObjectMapper getObjectMapper() {
+    public static @NotNull FlagsHPlugin getPlugin() { return FlagsHPlugin.getInstance(); }
+    public static @NotNull ObjectMapper getObjectMapper() {
         if (objectMapper == null) {
             objectMapper = new ObjectMapper();
             objectMapper.setVisibility(
@@ -106,7 +106,7 @@ public class FlagsH {
      * @param itemStack ItemStack of the banner.
      * @return true if the flag have been created, false if not.
      */
-    public static boolean createFlag(@Nullable Player p, @Nonnull Block banner, @Nonnull Block behind, @Nonnull ItemStack itemStack,
+    public static boolean createFlag(@Nullable Player p, @NotNull Block banner, @NotNull Block behind, @NotNull ItemStack itemStack,
             boolean flagNotBanner) {
         Flag f = new Flag(banner, flagNotBanner, behind);
         f.create(itemStack);
@@ -140,7 +140,7 @@ public class FlagsH {
      * @param bannerPlaced true if the banner have been placed on the block banner, false if it's in the player hand.
      * @return true if the flag have been extended, false if not.
      */
-    public static boolean extendsFlag(@Nonnull Flag flag, @Nullable Block bannerPlaced, @Nullable Player playerToRemoveItemFrom) {
+    public static boolean extendsFlag(@NotNull Flag flag, @Nullable Block bannerPlaced, @Nullable Player playerToRemoveItemFrom) {
         if (flag.getSize() >= FlagsHConfig.maxFlagSize()) {
             if (bannerPlaced != null) {
                 bannerPlaced.breakNaturally();
@@ -186,7 +186,7 @@ public class FlagsH {
     }
 
     /** Get a flag from it's coordinates. */
-    public static @Nullable Flag getFlagAt(int x, int y, int z, @Nonnull World world) {
+    public static @Nullable Flag getFlagAt(int x, int y, int z, @NotNull World world) {
         for (Flag flag : getPlugin().getFlags()) {
             if (flag.getX() == x && flag.getY() == y && flag.getZ() == z && flag.getWorldId().equals(world.getUID())) {
                 return flag;
@@ -195,12 +195,12 @@ public class FlagsH {
         return null;
     }
     /** Get a flag from it's coordinates. */
-    public static @Nullable Flag getFlagAt(@Nonnull Location loc) {
+    public static @Nullable Flag getFlagAt(@NotNull Location loc) {
         return getFlagAt(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), loc.getWorld());
     }
 
     /** Get a flag from it's interaction. */
-    public static @Nullable Flag getFlagLinkedToEntity(@Nonnull UUID entityUuid) {
+    public static @Nullable Flag getFlagLinkedToEntity(@NotNull UUID entityUuid) {
         for (Flag flag : getPlugin().getFlags()) {
             if (flag.getInteractionsIds().contains(entityUuid)) {
                 return flag;
@@ -209,7 +209,7 @@ public class FlagsH {
         return null;
     }
     /** Get a flag from it's interaction. */
-    public static @Nullable Flag getFlagLinkedToEntity(@Nonnull Entity entity) {
+    public static @Nullable Flag getFlagLinkedToEntity(@NotNull Entity entity) {
         if (entity.getPersistentDataContainer().has(getFlagDataNamespacedKey(), PersistentDataType.STRING)) {
             String json = entity.getPersistentDataContainer().get(getFlagDataNamespacedKey(), PersistentDataType.STRING);
             FlagsHPlugin.getInstance().debug(() -> "Flag data found on entity " + entity.getUniqueId() + " : " + json);

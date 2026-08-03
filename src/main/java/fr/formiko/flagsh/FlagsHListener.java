@@ -1,7 +1,6 @@
 package fr.formiko.flagsh;
 
 import java.lang.reflect.Method;
-import javax.annotation.Nonnull;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -11,6 +10,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Listener for FlagsH plugin.
@@ -24,7 +24,7 @@ public class FlagsHListener implements Listener {
      * @param event BlockPlaceEvent triggered when a player places a block
      */
     @EventHandler(ignoreCancelled = true)
-    public void onPlace(@Nonnull BlockPlaceEvent event) {
+    public void onPlace(@NotNull BlockPlaceEvent event) {
         // if a banner is placed
         if (FlagsH.ALL_WALL_BANNERS.contains(event.getBlock().getType())) {
             // if player is not allowed to interact with flag at this location, cancel the event
@@ -55,7 +55,7 @@ public class FlagsHListener implements Listener {
      * @param event BlockPlaceEvent from {@code onPlace}
      * @return true if a flag have been created, false if a vanilla banner should be placed.
      */
-    private boolean createNewFlag(@Nonnull BlockPlaceEvent event) {
+    private boolean createNewFlag(@NotNull BlockPlaceEvent event) {
         boolean flagNotBanner = event.getPlayer().isSneaking();
 
         // Special case for off hand
@@ -90,7 +90,7 @@ public class FlagsHListener implements Listener {
      * @param event PlayerInteractEntityEvent triggered when a player interacts with an entity
      */
     @EventHandler(ignoreCancelled = true)
-    public void onInteractWithFlagEntity(@Nonnull PlayerInteractEntityEvent event) {
+    public void onInteractWithFlagEntity(@NotNull PlayerInteractEntityEvent event) {
         // if player click with a banner on hand on a flag : extend the flag
         if (FlagsH.ALL_BANNERS.contains(event.getPlayer().getInventory().getItemInMainHand().getType())
                 || FlagsH.ALL_BANNERS.contains(event.getPlayer().getInventory().getItemInOffHand().getType())) {
@@ -116,7 +116,7 @@ public class FlagsHListener implements Listener {
      * React to player hitting a flag entity.
      */
     @EventHandler(ignoreCancelled = true)
-    public void onHitFlagEntity(@Nonnull EntityDamageByEntityEvent event) {
+    public void onHitFlagEntity(@NotNull EntityDamageByEntityEvent event) {
         Flag flag = FlagsH.getFlagLinkedToEntity(event.getEntity());
         if (flag != null) {
             if (event.getDamager() instanceof Player p && !isPlayerForbiddenToInteract(p, event.getEntity().getLocation())) {
