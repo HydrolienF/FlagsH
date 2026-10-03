@@ -185,6 +185,32 @@ public class FlagsH {
         }
     }
 
+    /**
+     * Drop and remove flags whose banner cell is {@code block}, or whose wall block is {@code block}.
+     * Siege weapons remove blocks with {@code breakNaturally}, which does not fire {@code BlockBreakEvent},
+     * so they call this directly.
+     */
+    public static void breakFlagsStandingIn(@NotNull Block block) {
+        List<Flag> standing = new ArrayList<>();
+        UUID worldId = block.getWorld().getUID();
+        int x = block.getX();
+        int y = block.getY();
+        int z = block.getZ();
+        for (Flag flag : getPlugin().getFlags()) {
+            if (!flag.getWorldId().equals(worldId))
+                continue;
+            if (flag.getX() == x && flag.getY() == y && flag.getZ() == z) {
+                standing.add(flag);
+                continue;
+            }
+            Block support = flag.getSupportBlock();
+            if (support != null && support.getX() == x && support.getY() == y && support.getZ() == z)
+                standing.add(flag);
+        }
+        for (Flag flag : standing)
+            flag.remove();
+    }
+
     /** Get a flag from it's coordinates. */
     public static @Nullable Flag getFlagAt(int x, int y, int z, @NotNull World world) {
         for (Flag flag : getPlugin().getFlags()) {

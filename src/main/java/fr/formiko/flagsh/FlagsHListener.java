@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
@@ -82,6 +83,14 @@ public class FlagsHListener implements Listener {
 
         FlagsH.createFlag(event.getPlayer(), event.getBlockPlaced(), event.getBlockAgainst(), event.getItemInHand(), flagNotBanner);
         return true;
+    }
+
+    /**
+     * Drop a flag when a player breaks the banner cell or the wall it is attached to.
+     */
+    @EventHandler(ignoreCancelled = true)
+    public void onBlockBreak(@NotNull BlockBreakEvent event) {
+        FlagsH.breakFlagsStandingIn(event.getBlock());
     }
 
     /**
