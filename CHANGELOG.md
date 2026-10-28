@@ -1,5 +1,6 @@
 # 4.5.5
 Support from 1.20 to 26.3
+Drop a flag when a player breaks the banner cell or the wall it is attached to.
 
 # 4.5.4
 Support from 1.20 to 26.2
