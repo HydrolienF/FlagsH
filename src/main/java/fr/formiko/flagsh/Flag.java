@@ -73,6 +73,29 @@ public class Flag implements Serializable {
     public final int getZ() { return z; }
     public final int getYaw() { return yaw; }
     public final Location getLocation() { return new Location(getWorld(), getX(), getY(), getZ()); }
+
+    /**
+     * Wall block this flag is attached to. Yaw is stored instead of the wall coordinates:
+     * 0 = wall is +X, 180 = -X, 90 = +Z, -90 = -Z.
+     */
+    public @Nullable Block getSupportBlock() {
+        World world = getWorld();
+        if (world == null)
+            return null;
+        int supportX = x;
+        int supportZ = z;
+        if (yaw == 0)
+            supportX = x + 1;
+        else if (yaw == 180)
+            supportX = x - 1;
+        else if (yaw == 90)
+            supportZ = z + 1;
+        else if (yaw == -90)
+            supportZ = z - 1;
+        else
+            return null;
+        return world.getBlockAt(supportX, y, supportZ);
+    }
     public final @NotNull UUID getWorldId() { return worldId; }
     public final @Nullable World getWorld() { return FlagsH.getPlugin().getServer().getWorld(worldId); }
     public float getSize() { return size; }
